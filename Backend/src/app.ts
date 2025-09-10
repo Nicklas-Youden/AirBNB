@@ -1,9 +1,8 @@
 import express from "express";
-// import routes from "./api/controllers/routes/index";
+import airBnbDestinationsRoutes from "./api/routes/airBnbDestinationsRoutes";
 
 const app = express();
-
-// Routes
-// app.use("/api", routes);
+app.use(express.json());
+app.use("/api", airBnbDestinationsRoutes);
 
 export default app;
