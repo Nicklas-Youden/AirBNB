@@ -1,9 +1,9 @@
 import axios from "axios";
 
 class Connection {
-  getAirBNBs = () => this.get("airbnbs");
+  getAirBNBs = () => this.get("destinations");
 
-  getSingleAirBNB = (id: string) => this.get(`airbnbs/${id}`);
+  getSingleAirBNB = (id: string) => this.get(`destinations/${id}`);
 
   get = (endpoint: string) => {
     return new Promise((resolve) => {
