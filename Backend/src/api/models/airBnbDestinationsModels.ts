@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import { title } from "process";
 
 interface AirBnbDestination {
   title: string;
