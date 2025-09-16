@@ -1,11 +1,35 @@
 import { Request, Response } from "express";
 import { AirBnbDestinationsModel } from "../models/airBnbDestinationsModels";
 
-// Get all Destinations
+// Get all Destinations with pagination
 export const getAllDestinations = async (req: Request, res: Response) => {
   try {
-    const Destinations = await AirBnbDestinationsModel.find();
-    res.status(200).json(Destinations);
+    // Extract pagination parameters from query
+    const pageNumber = parseInt(req.query.pageNumber as string) || 1;
+    const pageSize = parseInt(req.query.pageSize as string) || 10;
+    const skip = (pageNumber - 1) * pageSize;
+
+    // Get total count and destinations
+    const totalDestinations = await AirBnbDestinationsModel.countDocuments();
+    const destinations = await AirBnbDestinationsModel.find()
+      .skip(skip)
+      .limit(pageSize);
+
+    const totalPages = Math.ceil(totalDestinations / pageSize);
+
+    const paging = {
+      pageNumber,
+      pageSize,
+      totalCount: totalDestinations,
+      totalPages,
+      isFirstPage: pageNumber === 1,
+      isLastPage: pageNumber === totalPages,
+    };
+
+    res.status(200).json({
+      destinations,
+      paging,
+    });
   } catch (error) {
     res.status(500).json({ message: "Error fetching Destinations", error });
   }
