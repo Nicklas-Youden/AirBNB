@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Icon from "../../lib/icon/icon";
 import { useApi } from "../../lib";
 
@@ -14,39 +14,77 @@ interface Listing {
   maxGuests: number;
 }
 
+// Type for paginated response
+interface PaginatedResponse {
+  destinations?: Listing[];
+  paging?: {
+    pageNumber: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages: number;
+  };
+}
+
 const Home = () => {
   const api = useApi();
 
   const [airBnbs, setAirBnbs] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paging, setPaging] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+    totalCount: 0,
+    totalPages: 0,
+  });
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchAirBnbs = async () => {
+  const fetchAirBnbs = useCallback(
+    async (pageNumber: number = currentPage) => {
       try {
         setLoading(true);
-        const data = await api.getAirBNBs();
-        if (isMounted && Array.isArray(data)) {
-          setAirBnbs(data as Listing[]);
+
+        const response = (await api.getAirBNBs({
+          pageNumber,
+          pageSize: paging.pageSize,
+        })) as PaginatedResponse;
+        setAirBnbs(response.destinations ?? []);
+        if (response.paging) {
+          setPaging(response.paging);
         }
       } catch (err) {
-        if (isMounted) {
-          console.error("Error fetching airBnbs:", err);
-        }
+        console.error("Error fetching airBnbs:", err);
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
-    };
+    },
+    [api, currentPage, paging.pageSize]
+  );
 
+  useEffect(() => {
     fetchAirBnbs();
+  }, [fetchAirBnbs]);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [api]);
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    fetchAirBnbs(pageNumber);
+  };
+
+  const getPaginationPages = (
+    currentPage: number,
+    totalPages: number,
+    maxPages: number = 10
+  ): number[] => {
+    if (totalPages <= maxPages) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    let start = Math.max(1, currentPage - Math.floor(maxPages / 2));
+    let end = start + maxPages - 1;
+    if (end > totalPages) {
+      end = totalPages;
+      start = Math.max(1, end - maxPages + 1);
+    }
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -62,7 +100,6 @@ const Home = () => {
 
       {!loading && (
         <>
-          <p className="text-gray-600 mb-6">Showing {airBnbs.length} AirBNBs</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {airBnbs.map((listing) => (
               <div
@@ -97,17 +134,36 @@ const Home = () => {
                   </p>
                   <p className="text-gray-600">${listing.price} per night</p>
                   <p className="text-gray-500 text-sm">
-                    {listing.roomType} ·
                     <Icon
                       type="accountOutline"
                       size="medium"
                       className="inline-block mr-1"
                     />
-                    {listing.maxGuests}
+                    {listing.maxGuests} · {listing.roomType}
                   </p>
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="mt-8 flex justify-center items-center space-x-2">
+            <div className="flex space-x-1">
+              {getPaginationPages(currentPage, paging.totalPages).map(
+                (pageNum) => (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`px-3 py-2 border rounded-md ${
+                      pageNum === currentPage
+                        ? "bg-gray-100 border-gray-300"
+                        : "border-gray-300 hover:bg-gray-50"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                )
+              )}
+            </div>
           </div>
         </>
       )}
