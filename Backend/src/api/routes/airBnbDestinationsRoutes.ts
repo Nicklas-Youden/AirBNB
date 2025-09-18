@@ -20,6 +20,7 @@ router.post("/destinations", createDestination);
 
 // Update a destination by ID
 router.put("/destinations/:id", updateDestination);
+router.patch("/destinations/:id", updateDestination);
 
 // Delete a destination by ID
 router.delete("/destinations/:id", deleteDestination);

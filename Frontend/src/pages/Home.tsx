@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Icon from "../../lib/icon/icon";
-import { useApi } from "../../lib";
+import { formatPeriodWithWeekday, useApi } from "../../lib";
 
 interface Listing {
   id: string | number;
@@ -12,6 +12,10 @@ interface Listing {
   price: number;
   roomType: string;
   maxGuests: number;
+  available: {
+    from: string;
+    to: string;
+  };
 }
 
 // Type for paginated response
@@ -37,6 +41,8 @@ const Home = () => {
     totalCount: 0,
     totalPages: 0,
   });
+
+  console.log(airBnbs);
 
   const fetchAirBnbs = useCallback(
     async (pageNumber: number = currentPage) => {
@@ -88,13 +94,11 @@ const Home = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">
-        Property AirBNBs
-      </h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">CapaBNBs</h1>
 
       {loading && (
         <div className="text-center py-8">
-          <p className="text-gray-600">Loading AirBNBs...</p>
+          <p className="text-gray-600">Loading CapaBNBs...</p>
         </div>
       )}
 
@@ -129,17 +133,27 @@ const Home = () => {
                       {listing.rating}
                     </div>
                   </div>
-                  <p className="text-gray-600">
+                  <p className="text-gray-500">
                     {listing.city}, {listing.country}
                   </p>
-                  <p className="text-gray-600">${listing.price} per night</p>
-                  <p className="text-gray-500 text-sm">
+                  <p className="text-gray-500">${listing.price}</p>
+                  <p className="text-gray-500">
+                    {formatPeriodWithWeekday(
+                      listing.available.from,
+                      listing.available.to,
+                      true
+                    )}
+                  </p>
+                  <p className="text-gray-500 text-sm flex items-center">
+                    <span className="text-black text-base">
+                      {listing.maxGuests}
+                    </span>
                     <Icon
                       type="accountOutline"
                       size="medium"
-                      className="inline-block mr-1"
+                      className="inline-block mr-1 center"
                     />
-                    {listing.maxGuests} · {listing.roomType}
+                    · {listing.roomType}
                   </p>
                 </div>
               </div>
