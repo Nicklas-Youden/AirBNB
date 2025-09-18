@@ -4,7 +4,7 @@ import Icon from "../../lib/icon/icon";
 import { formatPeriodWithWeekday, useApi } from "../../lib";
 
 interface Listing {
-  _id: string | number;
+  _id: string;
   images: string[];
   title: string;
   rating: number;
