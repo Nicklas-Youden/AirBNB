@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import Icon from "../../lib/icon/icon";
 import { formatPeriodWithWeekday, useApi } from "../../lib";
 
 interface Listing {
-  id: string | number;
+  _id: string | number;
   images: string[];
   title: string;
   rating: number;
@@ -31,6 +32,7 @@ interface PaginatedResponse {
 
 const Home = () => {
   const api = useApi();
+  const navigate = useNavigate();
 
   const [airBnbs, setAirBnbs] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,8 +43,6 @@ const Home = () => {
     totalCount: 0,
     totalPages: 0,
   });
-
-  console.log(airBnbs);
 
   const fetchAirBnbs = useCallback(
     async (pageNumber: number = currentPage) => {
@@ -92,6 +92,10 @@ const Home = () => {
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
 
+  const handleCardClick = (id: string | number) => {
+    navigate(`/destinations/${id}`);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">CapaBNBs</h1>
@@ -107,8 +111,9 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {airBnbs.map((listing) => (
               <div
-                key={listing.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                key={listing._id}
+                onClick={() => handleCardClick(listing._id)}
+                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
               >
                 <div className="h-48 bg-gray-200 flex items-center justify-center">
                   {listing.images.length > 0 ? (
