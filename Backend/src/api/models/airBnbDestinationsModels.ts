@@ -33,7 +33,7 @@ const airBnbDestinations: Schema = new Schema({
   averageRating: { type: Number, required: false },
   reviewCount: { type: Number, required: false },
   rating: { type: Number, required: false }, //temporary
-  maxGuests: { type: Number, required: false },
+  maxGuests: { type: Number, required: true },
   //   reviews: {
   //     type: [
   //       {
@@ -44,15 +44,15 @@ const airBnbDestinations: Schema = new Schema({
   //     ],
   //     required: true,
   //   },
-  // availability: {
-  //   type: [
-  //     {
-  //       from: { type: Date, required: false },
-  //       to: { type: Date, required: false },
-  //     },
-  //   ],
-  //   required: false,
-  // },
+  available: {
+    type: {
+      from: { type: Date, required: true },
+      to: { type: Date, required: true },
+    },
+    _id: false,
+    required: false,
+  },
+  occupied: { type: Boolean, required: false, default: false },
 });
 
 export const AirBnbDestinationsModel = mongoose.model<AirBnbDestination>(

@@ -22,3 +22,18 @@ dist/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Backend images and uploads
+Backend/public/images/
+Backend/private/images/
+Backend/fileServer/
+Backend/uploads/
+Backend/storage/
+
+# Image files (if you want to exclude all images)
+# *.jpg
+# *.jpeg
+# *.png
+# *.gif
+# *.webp
+# *.svg
