@@ -5,7 +5,12 @@ import Home from "./pages/Home";
 import DestinationDetail from "./pages/DestinationsDetails";
 
 const App = () => {
-  return <Content />;
+  return (
+    <div className="container mx-auto px-4 pt-8">
+      <Header />
+      <Content />
+    </div>
+  );
 };
 
 const Content = () => {
@@ -26,3 +31,11 @@ const Content = () => {
   );
 };
 export default App;
+
+const Header = () => {
+  return (
+    <div className="">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">CapaBNBs</h1>
+    </div>
+  );
+};

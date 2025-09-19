@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "../../lib/icon/icon";
-import { formatPeriodWithWeekday, useApi } from "../../lib";
+import { formatPeriod, useApi } from "../../lib";
 
 interface Listing {
   _id: string;
@@ -97,9 +97,7 @@ const Home = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">CapaBNBs</h1>
-
+    <div className="container mx-auto">
       {loading && (
         <div className="text-center py-8">
           <p className="text-gray-600">Loading CapaBNBs...</p>
@@ -141,14 +139,16 @@ const Home = () => {
                   <p className="text-gray-500">
                     {listing.city}, {listing.country}
                   </p>
-                  <p className="text-gray-500">${listing.price}</p>
-                  <p className="text-gray-500">
-                    {formatPeriodWithWeekday(
-                      listing.available.from,
-                      listing.available.to,
-                      true
-                    )}
-                  </p>
+                  <div className="flex gap-0.5 items-center">
+                    <p className="text-gray-500">${listing.price} ·</p>
+                    <p className="text-gray-500 text-sm">
+                      {formatPeriod(
+                        listing.available.from,
+                        listing.available.to,
+                        true
+                      )}
+                    </p>
+                  </div>
                   <p className="text-gray-500 text-sm flex items-center">
                     <span className="text-black text-base">
                       {listing.maxGuests}
