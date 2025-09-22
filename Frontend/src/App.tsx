@@ -7,7 +7,7 @@ import DestinationDetail from "./pages/DestinationsDetails";
 const App = () => {
   return (
     <BrowserRouter>
-      <div className="container mx-auto px-4 pt-8">
+      <div className=" mx-auto w-full">
         <Header />
         <Content />
       </div>
@@ -17,8 +17,8 @@ const App = () => {
 
 const Content = () => {
   return (
-    <div className="App">
-      <main>
+    <div className="App mx-10 lg:mx-15">
+      <main className="w-full max-w-[1500px] mx-auto">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
@@ -36,12 +36,12 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="">
+    <div className="border-b border-gray-400 mb-4 pt-4 px-10 lg:px-15 bg-gray-100">
       <h1
         onClick={() => navigate("/")}
-        className="text-3xl font-bold text-gray-800 mb-6 cursor-pointer hover:text-gray-600 transition-colors"
+        className="text-3xl font-bold text-gray-800 mb-6 cursor-pointer w-fit"
       >
-        CapaBNBs
+        CapaBNB
       </h1>
     </div>
   );
