@@ -152,9 +152,13 @@ const DestinationDetail = () => {
               </p>
             </div>
 
-            <button className="w-full max-w-56 bg-red-500 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors">
+            <Button
+              size="large"
+              variant="contained"
+              className="w-full max-w-56"
+            >
               Reserve
-            </button>
+            </Button>
           </div>
         </div>
 

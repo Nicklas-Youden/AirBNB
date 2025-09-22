@@ -15,8 +15,8 @@ interface AirBnbDestination {
   reviewCount?: number;
   rating: number; //temporary
   maxGuests?: number;
-  bedrooms: number;
-  bathrooms: number;
+  bedRooms: number;
+  bathRooms: number;
   beds: number;
   //   reviews: { user: string; comment: string; rating: number }[];
   availability: { from: Date; to: Date }[];
@@ -37,8 +37,8 @@ const airBnbDestinations: Schema = new Schema({
   reviewCount: { type: Number, required: false },
   rating: { type: Number, required: false }, //temporary
   maxGuests: { type: Number, required: true },
-  bedrooms: { type: Number, required: true },
-  bathrooms: { type: Number, required: true },
+  bedRooms: { type: Number, required: true },
+  bathRooms: { type: Number, required: true },
   beds: { type: Number, required: true },
   //   reviews: {
   //     type: [
