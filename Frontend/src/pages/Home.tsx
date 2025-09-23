@@ -39,7 +39,7 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [paging, setPaging] = useState({
     pageNumber: 1,
-    pageSize: 10,
+    pageSize: 50,
     totalCount: 0,
     totalPages: 0,
   });
