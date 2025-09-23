@@ -216,13 +216,37 @@ const DestinationDetail = () => {
 
           <div className="border-b pb-2 border-b-gray-300">
             <div className="flex flex-wrap gap-4 text-gray-800">
-              <span>{destination.maxGuests} guests</span>
-              <span>•</span>
-              <span>{destination.bedRooms} bedrooms</span>
-              <span>•</span>
-              <span>{destination.beds} beds</span>
-              <span>•</span>
-              <span>{destination.bathRooms} bathrooms</span>
+              <span className="flex self-center gap-1">
+                {destination.maxGuests}{" "}
+                <Icon
+                  type="accountOutline"
+                  size="medium"
+                  className="inline-block"
+                />
+              </span>
+              •
+              <span className="flex self-center gap-1">
+                {destination.bedRooms}{" "}
+                <Icon
+                  type="homeOutline"
+                  size="medium"
+                  className="inline-block"
+                />
+              </span>
+              •
+              <span className="flex self-center gap-1">
+                {destination.beds}{" "}
+                <Icon
+                  type="bedDoubleOutline"
+                  size="medium"
+                  className="inline-block"
+                />
+              </span>
+              •
+              <span className="flex self-center gap-1">
+                {destination.bathRooms}{" "}
+                <Icon type="toilet" size="medium" className="inline-block" />
+              </span>
             </div>
           </div>
 
@@ -236,10 +260,7 @@ const DestinationDetail = () => {
 
         <div className="md:col-span-1 md:row-span-2">
           <div className="sticky top-8 border rounded-lg p-6 shadow-lg">
-            <div className="mb-4">
-              <span className="text-2xl font-bold">${destination.price}</span>
-              <span className="text-gray-600"> / night</span>
-            </div>
+            <div className="mb-4 text-2xl font-bold">${destination.price}</div>
 
             <div className="mb-4">
               <h4 className="font-medium mb-2">Availability</h4>

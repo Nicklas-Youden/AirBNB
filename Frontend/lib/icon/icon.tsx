@@ -3,15 +3,21 @@ import {
   mdiBedEmpty,
   mdiImageOffOutline,
   mdiStar,
+  mdiToilet,
+  mdiHomeOutline,
+  mdiBedDoubleOutline,
 } from "@mdi/js";
 import MdiIcon from "@mdi/react";
 import React from "react";
 
 const mdiIconPaths = {
+  toilet: mdiToilet,
   star: mdiStar,
   imageOffOutline: mdiImageOffOutline,
   bedEmpty: mdiBedEmpty,
   accountOutline: mdiAccountOutline,
+  homeOutline: mdiHomeOutline,
+  bedDoubleOutline: mdiBedDoubleOutline,
 };
 
 const calculateSize: (tempSize: string | number) => string | number = (

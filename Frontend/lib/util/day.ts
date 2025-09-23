@@ -1,10 +1,10 @@
 import dayjs from "dayjs";
 
-const defaultDayFormat = "DD-MM-YYYY";
-const defaultWeekdayFormat = "dddd, DD-MM-YYYY";
+const defaultDayFormat = "DD.MM.YYYY";
+const defaultWeekdayFormat = "dddd, DD.MM.YYYY";
 
-const shortDayFormat = "D-M-YY";
-const shortDateFormat = "ddd, D-M-YY";
+const shortDayFormat = "D.M.YY";
+const shortDateFormat = "ddd, D.M.YY";
 
 export const formatDate = (date: string, short: boolean = false) => {
   const format = short ? shortDayFormat : defaultDayFormat;
