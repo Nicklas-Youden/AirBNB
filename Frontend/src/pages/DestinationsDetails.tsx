@@ -293,7 +293,7 @@ const DestinationDetail = () => {
         fullWidth
         maxWidth="lg"
         open={showAllImages}
-        onClose={setShowAllImages}
+        onClose={() => setShowAllImages(false)}
       >
         <DialogTitle>All Images</DialogTitle>
         <DialogContent>
