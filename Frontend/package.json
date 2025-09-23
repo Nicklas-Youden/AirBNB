@@ -10,9 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@mdi/font": "^7.4.47",
     "@mdi/js": "^7.4.47",
     "@mdi/react": "^1.6.1",
+    "@mui/material": "^7.3.2",
     "@tailwindcss/postcss": "^4.1.13",
     "@tailwindcss/vite": "^4.1.13",
     "axios": "^1.11.0",
