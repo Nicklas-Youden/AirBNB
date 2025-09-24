@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Icon from "../../lib/icon/icon";
+
 import { formatPeriodWithWeekday, useApi } from "../../lib";
 import {
   Button,
@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import Icon from "../../lib/icon/icon";
 
 interface Destination {
   id: string | number;
@@ -259,7 +260,7 @@ const DestinationDetail = () => {
         </div>
 
         <div className="md:col-span-1 md:row-span-2">
-          <div className="sticky top-8 border rounded-lg p-6 shadow-lg">
+          <div className="sticky top-24 border rounded-lg p-6 shadow-lg">
             <div className="mb-4 text-2xl font-bold">${destination.price}</div>
 
             <div className="mb-4">
