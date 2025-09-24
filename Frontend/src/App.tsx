@@ -3,6 +3,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import DestinationDetail from "./pages/DestinationsDetails";
+import { UserLoginIcon } from "../lib/components/Login";
 
 const App = () => {
   return (
@@ -36,13 +37,15 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="border-b border-gray-400 mb-4 pt-4 px-10 lg:px-15 bg-gray-100">
+    <div className="sticky top-0 z-50 border-b border-gray-400 mb-4 flex justify-between items-center py-4 px-10 lg:px-15 bg-gray-100">
       <h1
         onClick={() => navigate("/")}
-        className="text-3xl font-bold text-gray-800 mb-6 cursor-pointer w-fit"
+        className="text-3xl font-bold text-gray-800 cursor-pointer w-fit"
       >
         CapaBNB
       </h1>
+
+      <UserLoginIcon />
     </div>
   );
 };

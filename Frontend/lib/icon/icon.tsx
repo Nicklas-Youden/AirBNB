@@ -6,11 +6,13 @@ import {
   mdiToilet,
   mdiHomeOutline,
   mdiBedDoubleOutline,
+  mdiAccountCircleOutline,
 } from "@mdi/js";
 import MdiIcon from "@mdi/react";
 import React from "react";
 
 const mdiIconPaths = {
+  accountCircleOutline: mdiAccountCircleOutline,
   toilet: mdiToilet,
   star: mdiStar,
   imageOffOutline: mdiImageOffOutline,
