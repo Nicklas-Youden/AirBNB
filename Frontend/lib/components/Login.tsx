@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   Box,
-  Typography,
 } from "@mui/material";
 
 import { useState } from "react";
@@ -71,7 +70,7 @@ const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>
         <h2 className="text-center text-2xl font-medium">
-          CapaBNB {isSignUp ? "sign Up" : "login"}
+          CapaBNB {isSignUp ? "sign up" : "login"}
         </h2>
       </DialogTitle>
 
