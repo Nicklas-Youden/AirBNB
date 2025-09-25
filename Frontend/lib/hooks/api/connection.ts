@@ -18,6 +18,28 @@ class Connection {
         });
     });
   };
+
+  createAirBNB = (data: object) => this.post("destinations", data);
+
+  login = (email: string, password: string) =>
+    this.post("users/login", { email, password });
+
+  signup = (email: string, password: string, username: string, phone: number) =>
+    this.post("users/signup", { email, password, username, phone });
+
+  logout = () => this.post("users/logout");
+
+  post = (endpoint: string, data?: object) => {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`/api/${endpoint}`, data)
+        .then((response) => resolve(response.data))
+        .catch((error) => {
+          console.error("API POST Error:", error.response.data);
+          reject(error);
+        });
+    });
+  };
 }
 
 export default Connection;
