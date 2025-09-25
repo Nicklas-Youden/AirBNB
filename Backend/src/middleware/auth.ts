@@ -35,7 +35,10 @@ export const authenticateToken = (
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      userId: string;
+      email: string;
+    };
     req.user = {
       userId: decoded.userId,
       email: decoded.email,

@@ -1,10 +1,10 @@
 import express from "express";
-import { 
-  registerUser, 
-  loginUser, 
-  getUserProfile, 
+import {
+  registerUser,
+  loginUser,
+  getUserProfile,
   updateUserProfile,
-  deleteUser
+  deleteUser,
 } from "../controllers/userController";
 import { authenticateToken } from "../../middleware/auth";
 
