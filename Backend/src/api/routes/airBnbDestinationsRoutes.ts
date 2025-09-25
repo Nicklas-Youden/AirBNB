@@ -10,19 +10,19 @@ import {
 const router = Router();
 
 // Get all Destinations
-router.get("/destinations", getAllDestinations);
+router.get("/", getAllDestinations);
 
 // Get a single destination by ID
-router.get("/destinations/:id", getDestinationById);
+router.get("/:id", getDestinationById);
 
 // Create a new destination
-router.post("/destinations", createDestination);
+router.post("/", createDestination);
 
 // Update a destination by ID
-router.put("/destinations/:id", updateDestination);
-router.patch("/destinations/:id", updateDestination);
+router.put("/:id", updateDestination);
+router.patch("/:id", updateDestination);
 
 // Delete a destination by ID
-router.delete("/destinations/:id", deleteDestination);
+router.delete("/:id", deleteDestination);
 
 export default router;
