@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import Icon from "../icon/icon";
 import { useState } from "react";
+import { useApi } from "../hooks/api/useApi";
 
 export const UserLoginIcon = () => {
   const [openLoginDialog, setOpenLoginDialog] = useState(false);
@@ -38,25 +39,37 @@ interface LoginDialogProps {
 }
 
 const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
+  const api = useApi();
   const [isSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
+  const [error, setError] = useState("");
+
+  const handleOnClose = () => {
+    resetForm();
+    onClose();
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isSignUp) {
-      resetForm();
-      // Handle sign up logic
-      console.log("Sign up:", { name, email, password, confirmPassword });
+      // resetForm();
+      // // Handle sign up logic
+      // console.log("Sign up:", { name, email, password, confirmPassword });
     } else {
-      resetForm();
-      // Handle login logic
-      console.log("Login:", { email, password });
+      api
+        .login(email, password)
+        .then(() => {
+          handleOnClose();
+        })
+        .catch((error) => {
+          setError(error.response.data.message);
+          setPassword("");
+        });
     }
-    onClose();
   };
 
   const resetForm = () => {
@@ -65,6 +78,7 @@ const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
     setConfirmPassword("");
     setName("");
     setPhone("");
+    setError("");
   };
 
   //   const toggleMode = () => {
@@ -84,7 +98,7 @@ const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
         <Box
           component="form"
           onSubmit={handleSubmit}
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-4 pt-4"
         >
           {isSignUp && (
             <TextField
@@ -94,6 +108,8 @@ const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              error={!!error}
+              helperText={error}
             />
           )}
 
@@ -104,6 +120,8 @@ const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            error={!!error}
+            helperText={error}
           />
           {isSignUp && (
             <TextField
@@ -113,6 +131,8 @@ const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
+              error={!!error}
+              helperText={error}
             />
           )}
 
@@ -123,6 +143,8 @@ const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            error={!!error}
+            helperText={error}
           />
 
           {isSignUp && (
@@ -133,6 +155,8 @@ const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              error={!!error}
+              helperText={error}
             />
           )}
         </Box>
@@ -140,7 +164,7 @@ const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
       <div className="px-2 pb-3">
         <DialogActions className="flex flex-col gap-2 ">
           <Button variant="contained" size="large" onClick={handleSubmit}>
-            {isSignUp ? "Sign Up" : "Login"}
+            {isSignUp ? "Sign Up" : "Sign In"}
           </Button>
 
           {/* <Typography variant="body2" textAlign="center">
