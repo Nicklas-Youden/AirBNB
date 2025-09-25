@@ -3,13 +3,11 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  IconButton,
   TextField,
   Button,
   Box,
-  Typography,
 } from "@mui/material";
-import Icon from "../icon/icon";
+
 import { useState } from "react";
 import { useApi } from "../hooks/api/useApi";
 
@@ -18,13 +16,9 @@ export const UserLoginIcon = () => {
 
   return (
     <>
-      <IconButton onClick={() => setOpenLoginDialog(true)}>
-        <Icon
-          type="accountCircleOutline"
-          size="large"
-          className="inline-block"
-        />
-      </IconButton>
+      <Button onClick={() => setOpenLoginDialog(true)} variant="contained">
+        Sign in
+      </Button>
       <LoginDialog
         open={openLoginDialog}
         onClose={() => setOpenLoginDialog(false)}
@@ -89,9 +83,9 @@ const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>
-        <Typography variant="h5" component="h2" textAlign="center">
-          {isSignUp ? "Sign Up" : "Login"}
-        </Typography>
+        <h2 className="text-center text-2xl font-medium">
+          CapaBNB {isSignUp ? "sign up" : "login"}
+        </h2>
       </DialogTitle>
 
       <DialogContent>
