@@ -4,15 +4,20 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import DestinationDetail from "./pages/DestinationsDetails";
 import { UserLoginIcon } from "../lib/components/Login";
+import { AuthProvider } from "../lib/contexts/AuthContext";
+import { useAuthContext } from "../lib";
+import { UserHeaderIcon } from "../lib/components/UserIcon";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <div className=" mx-auto w-full">
-        <Header />
-        <Content />
-      </div>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <div className=" mx-auto w-full">
+          <Header />
+          <Content />
+        </div>
+      </BrowserRouter>
+    </AuthProvider>
   );
 };
 
@@ -35,6 +40,7 @@ export default App;
 
 const Header = () => {
   const navigate = useNavigate();
+  const isAuthenticated = useAuthContext() || false;
 
   return (
     <div className="sticky top-0 z-50 border-b border-gray-400 mb-4 flex justify-between items-center py-4 px-10 lg:px-15 bg-gray-100">
@@ -44,8 +50,7 @@ const Header = () => {
       >
         CapaBNB
       </h1>
-
-      <UserLoginIcon />
+      {isAuthenticated ? <UserHeaderIcon /> : <UserLoginIcon />}
     </div>
   );
 };
