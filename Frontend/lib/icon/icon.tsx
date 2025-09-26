@@ -7,6 +7,7 @@ import {
   mdiHomeOutline,
   mdiBedDoubleOutline,
   mdiAccountCircleOutline,
+  mdiFloorPlan,
 } from "@mdi/js";
 import MdiIcon from "@mdi/react";
 import React from "react";
@@ -20,6 +21,7 @@ const mdiIconPaths = {
   accountOutline: mdiAccountOutline,
   homeOutline: mdiHomeOutline,
   bedDoubleOutline: mdiBedDoubleOutline,
+  floorPlan: mdiFloorPlan,
 };
 
 const calculateSize: (tempSize: string | number) => string | number = (

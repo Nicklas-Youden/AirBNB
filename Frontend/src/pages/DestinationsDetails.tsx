@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { formatPeriodWithWeekday, useApi } from "../../lib";
+import {
+  formatPeriodWithWeekday,
+  LoginDialog,
+  useApi,
+  useAuthContext,
+} from "../../lib";
 import {
   Button,
   Dialog,
@@ -42,6 +47,13 @@ const DestinationDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAllImages, setShowAllImages] = useState(false);
+  const [openLoginDialog, setOpenLoginDialog] = useState(false);
+  const isAuthenticated = useAuthContext() || false;
+
+  const handleBookingDialog = () => {
+    // Add booking logic here
+    console.log("Booking clicked for destination:", destination?.title);
+  };
 
   const renderImages = () => {
     if (!destination?.images || destination.images.length === 0) {
@@ -54,7 +66,6 @@ const DestinationDetail = () => {
 
     const images = destination.images;
 
-    // 1 image - fill the entire container
     if (images.length === 1) {
       return (
         <div className="w-full h-96 rounded-lg overflow-hidden mb-8">
@@ -67,7 +78,6 @@ const DestinationDetail = () => {
       );
     }
 
-    // 2 images - side by side
     if (images.length === 2) {
       return (
         <div className="grid gap-2 h-96 rounded-lg overflow-hidden mb-8 grid-cols-2 grid-rows-1">
@@ -86,7 +96,6 @@ const DestinationDetail = () => {
       );
     }
 
-    // 3 images - large left, two stacked right
     if (images.length >= 3) {
       return (
         <div className="grid gap-2 h-96 rounded-lg overflow-hidden mb-8 grid-cols-3 grid-rows-2">
@@ -283,13 +292,25 @@ const DestinationDetail = () => {
               </p>
             </div>
 
-            <Button
-              size="large"
-              variant="contained"
-              className="w-full max-w-56"
-            >
-              Reserve
-            </Button>
+            {isAuthenticated ? (
+              <Button
+                size="large"
+                variant="contained"
+                className="w-full max-w-56"
+                onClick={handleBookingDialog}
+              >
+                Reserve
+              </Button>
+            ) : (
+              <Button
+                size="large"
+                variant="contained"
+                className="w-full max-w-56"
+                onClick={() => setOpenLoginDialog(true)}
+              >
+                Login to Reserve
+              </Button>
+            )}
           </div>
         </div>
 
@@ -310,6 +331,11 @@ const DestinationDetail = () => {
           </div>
         </div>
       </div>
+
+      <LoginDialog
+        open={openLoginDialog}
+        onClose={() => setOpenLoginDialog(false)}
+      />
 
       <Dialog
         fullWidth

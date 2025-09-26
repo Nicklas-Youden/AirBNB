@@ -3,7 +3,7 @@ import Icon from "../icon/icon";
 import { useState } from "react";
 
 export const UserHeaderIcon = () => {
-  const [openLoginDialog, setOpenDialog] = useState(false);
+  const [, setOpenDialog] = useState(false);
 
   return (
     <>
