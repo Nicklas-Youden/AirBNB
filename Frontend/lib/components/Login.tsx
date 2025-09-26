@@ -10,7 +10,6 @@ import {
 
 import { useState } from "react";
 import { useApi } from "../hooks/api/useApi";
-import useAuthContext from "../hooks/Auth/useAuth";
 
 export const UserLoginIcon = () => {
   const [openLoginDialog, setOpenLoginDialog] = useState(false);
@@ -33,10 +32,8 @@ interface LoginDialogProps {
   onClose: () => void;
 }
 
-const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
+export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
   const api = useApi();
-  const authContext = useAuthContext();
-  const setToken = authContext?.setToken;
   const [isSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -59,12 +56,7 @@ const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
     } else {
       api
         .login(email, password)
-        .then((response) => {
-          const loginResponse = response as { token?: string };
-          if (loginResponse.token) {
-            setToken?.(loginResponse.token);
-          }
-
+        .then(() => {
           handleOnClose();
         })
         .catch((error) => {
