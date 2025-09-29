@@ -40,13 +40,12 @@ export const registerUser = async (
     const token = jwt.sign(payload, JWT_SECRET);
 
     res.status(201).json({
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        phone: user.phone,
-        avatar: user.avatar,
-      },
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+      avatar: user.avatar,
+
       token,
     });
   } catch (error) {
@@ -92,13 +91,12 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     const token = jwt.sign(payload, JWT_SECRET);
 
     res.status(200).json({
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        phone: user.phone,
-        avatar: user.avatar,
-      },
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+      avatar: user.avatar,
+
       token,
     });
   } catch (error) {
@@ -125,13 +123,11 @@ export const getUserProfile = async (
     }
 
     res.status(200).json({
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        phone: user.phone,
-        avatar: user.avatar,
-      },
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+      avatar: user.avatar,
     });
   } catch (error) {
     console.error("Get profile error:", error);
@@ -163,13 +159,11 @@ export const updateUserProfile = async (
     }
 
     res.status(200).json({
-      user: {
-        id: updatedUser._id,
-        username: updatedUser.username,
-        email: updatedUser.email,
-        phone: updatedUser.phone,
-        avatar: updatedUser.avatar,
-      },
+      id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      phone: updatedUser.phone,
+      avatar: updatedUser.avatar,
     });
   } catch (error) {
     console.error("Update profile error:", error);
@@ -198,11 +192,7 @@ export const deleteUser = async (
     }
 
     res.status(200).json({
-      deletedUser: {
-        id: deletedUser._id,
-        username: deletedUser.username,
-        email: deletedUser.email,
-      },
+      id: deletedUser._id,
     });
   } catch (error) {
     console.error("Delete user error:", error);
