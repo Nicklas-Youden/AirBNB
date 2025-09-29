@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 import { useState } from "react";
-import { useApi } from "../hooks/api/useApi";
+import { useAuthContext } from "../hooks/Auth/useAuth";
 
 export const UserLoginIcon = () => {
   const [openLoginDialog, setOpenLoginDialog] = useState(false);
@@ -33,7 +33,7 @@ interface LoginDialogProps {
 }
 
 export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
-  const api = useApi();
+  const authContext = useAuthContext();
   const [isSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -47,22 +47,28 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
     onClose();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSignUp) {
       // resetForm();
       // // Handle sign up logic
       // console.log("Sign up:", { name, email, password, confirmPassword });
     } else {
-      api
-        .login(email, password)
-        .then(() => {
-          handleOnClose();
-        })
-        .catch((error) => {
-          setError(error.response.data.message);
-          setPassword("");
+      try {
+        await authContext?.login({
+          email,
+          password,
+          remember_me: true,
         });
+        handleOnClose();
+      } catch (error: unknown) {
+        const err = error as {
+          response?: { data?: { message?: string } };
+          message?: string;
+        };
+        setError(err.response?.data?.message || err.message || "Login failed");
+        setPassword("");
+      }
     }
   };
 
