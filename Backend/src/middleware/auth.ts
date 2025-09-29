@@ -28,7 +28,6 @@ export const authenticateToken = (
 
   if (!token) {
     res.status(401).json({
-      success: false,
       message: "Access token required",
     });
     return;
@@ -46,7 +45,6 @@ export const authenticateToken = (
     next();
   } catch (error) {
     res.status(403).json({
-      success: false,
       message: "Invalid or expired token",
     });
   }

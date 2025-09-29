@@ -48,7 +48,7 @@ const DestinationDetail = () => {
   const [error, setError] = useState<string | null>(null);
   const [showAllImages, setShowAllImages] = useState(false);
   const [openLoginDialog, setOpenLoginDialog] = useState(false);
-  const isAuthenticated = useAuthContext() || false;
+  const { isAuthenticated } = useAuthContext();
 
   const handleBookingDialog = () => {
     // Add booking logic here
