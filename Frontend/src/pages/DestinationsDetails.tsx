@@ -12,7 +12,9 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
+  TextField,
 } from "@mui/material";
 import Icon from "../../lib/icon/icon";
 
@@ -38,23 +40,32 @@ interface Destination {
   };
 }
 
+interface UserProfile {
+  id: string;
+  email: string;
+  username: string;
+  phone: number;
+}
+
 const DestinationDetail = () => {
   const { destinationId } = useParams<{ destinationId: string }>();
   const navigate = useNavigate();
   const api = useApi();
 
   const [destination, setDestination] = useState<Destination | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAllImages, setShowAllImages] = useState(false);
   const [openLoginDialog, setOpenLoginDialog] = useState(false);
+  const [openBookingDialog, setOpenBookingDialog] = useState(false);
   const { isAuthenticated } = useAuthContext();
 
   const handleBookingDialog = () => {
-    // Add booking logic here
-    console.log("Booking clicked for destination:", destination?.title);
+    setOpenBookingDialog(true);
   };
 
+  console.log(user);
   const renderImages = () => {
     if (!destination?.images || destination.images.length === 0) {
       return (
@@ -175,6 +186,23 @@ const DestinationDetail = () => {
 
     fetchDestination();
   }, [destinationId, api]);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!isAuthenticated) {
+        return;
+      }
+
+      try {
+        const response = (await api.getUserProfile()) as UserProfile;
+        setUser(response);
+      } catch (err) {
+        console.error("Error fetching user profile:", err);
+      }
+    };
+
+    fetchUserProfile();
+  }, [isAuthenticated, api]);
 
   if (loading) {
     return (
@@ -358,6 +386,58 @@ const DestinationDetail = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setShowAllImages(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openBookingDialog}
+        onClose={() => setOpenBookingDialog(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Booking</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <h2>{destination.title}</h2>
+            <p>Price: ${destination.price}</p>
+            <p>
+              Availability:{" "}
+              {formatPeriodWithWeekday(
+                destination.available.from,
+                destination.available.to
+              )}
+            </p>
+            <p>Address: {destination.address}</p>
+          </DialogContentText>
+          <DialogContentText>
+            <div className="flex gap-4 pt-4">
+              <TextField
+                id="email"
+                label="Email"
+                variant="outlined"
+                defaultValue={user?.email || ""}
+                fullWidth
+              />
+              <TextField
+                type="number"
+                id="guests"
+                label="Number of Guests"
+                variant="outlined"
+                defaultValue={1}
+                fullWidth
+                inputProps={{
+                  min: 1,
+                  max: destination.maxGuests,
+                }}
+              />
+            </div>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit" variant="contained" color="primary">
+            Book
+          </Button>
+          <Button onClick={() => setOpenBookingDialog(false)}>Close</Button>
         </DialogActions>
       </Dialog>
     </>
