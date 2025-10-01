@@ -65,7 +65,27 @@ const DestinationDetail = () => {
     setOpenBookingDialog(true);
   };
 
-  console.log(user);
+  const handleBooking = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get("email") as string;
+    const guests = formData.get("guests") as string;
+
+    try {
+      await api.createBooking({
+        destinationId,
+        userId: user?.id,
+        email,
+        guests: parseInt(guests),
+      });
+
+      setOpenBookingDialog(false);
+    } catch (error) {
+      console.error("Booking error:", error);
+    }
+  };
+
   const renderImages = () => {
     if (!destination?.images || destination.images.length === 0) {
       return (
@@ -398,43 +418,54 @@ const DestinationDetail = () => {
         <DialogTitle>Booking</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <h2>{destination.title}</h2>
-            <p>Price: ${destination.price}</p>
-            <p>
-              Availability:{" "}
-              {formatPeriodWithWeekday(
-                destination.available.from,
-                destination.available.to
-              )}
-            </p>
-            <p>Address: {destination.address}</p>
+            <span className="font-bold text-lg">{destination.title}</span>
           </DialogContentText>
+
+          <DialogContentText>Price: ${destination.price}</DialogContentText>
           <DialogContentText>
+            Availability:{" "}
+            {formatPeriodWithWeekday(
+              destination.available.from,
+              destination.available.to
+            )}
+          </DialogContentText>
+          <DialogContentText>Address: {destination.address}</DialogContentText>
+
+          <form onSubmit={handleBooking} id="booking-form">
             <div className="flex gap-4 pt-4">
               <TextField
+                name="email"
                 id="email"
                 label="Email"
                 variant="outlined"
                 defaultValue={user?.email || ""}
                 fullWidth
+                required
               />
               <TextField
                 type="number"
+                name="guests"
                 id="guests"
                 label="Number of Guests"
                 variant="outlined"
                 defaultValue={1}
                 fullWidth
+                required
                 inputProps={{
                   min: 1,
                   max: destination.maxGuests,
                 }}
               />
             </div>
-          </DialogContentText>
+          </form>
         </DialogContent>
         <DialogActions>
-          <Button type="submit" variant="contained" color="primary">
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            form="booking-form"
+          >
             Book
           </Button>
           <Button onClick={() => setOpenBookingDialog(false)}>Close</Button>
