@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import {
@@ -80,12 +80,37 @@ const DestinationDetail = () => {
         email,
         guests: parseInt(guests),
       });
-
       setOpenBookingDialog(false);
+      await fetchDestination();
     } catch (error) {
       console.error("Booking error:", error);
     }
   };
+
+  const fetchDestination = useCallback(async () => {
+    if (!destinationId) {
+      setError("No destination ID provided");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = (await api.getSingleAirBNB(
+        destinationId
+      )) as Destination;
+      setDestination(response);
+    } catch (err) {
+      console.error("Error fetching destination:", err);
+      setError("Failed to load destination details");
+    } finally {
+      setLoading(false);
+    }
+  }, [destinationId, api]);
+
+  useEffect(() => {
+    fetchDestination();
+  }, [fetchDestination]);
 
   const renderImages = () => {
     if (!destination?.images || destination.images.length === 0) {
@@ -182,31 +207,6 @@ const DestinationDetail = () => {
       );
     }
   };
-
-  useEffect(() => {
-    const fetchDestination = async () => {
-      if (!destinationId) {
-        setError("No destination ID provided");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        const response = (await api.getSingleAirBNB(
-          destinationId
-        )) as Destination;
-        setDestination(response);
-      } catch (err) {
-        console.error("Error fetching destination:", err);
-        setError("Failed to load destination details");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDestination();
-  }, [destinationId, api]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
