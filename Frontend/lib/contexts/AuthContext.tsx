@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useApi } from "../hooks/api/useApi";
-import Connection from "../hooks/api/connection";
 
 type User = {
   id: string;
