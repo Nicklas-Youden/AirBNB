@@ -10,8 +10,10 @@ export const getAllDestinations = async (req: Request, res: Response) => {
     const skip = (pageNumber - 1) * pageSize;
 
     // Get total count and destinations
-    const totalDestinations = await AirBnbDestinationsModel.countDocuments();
-    const destinations = await AirBnbDestinationsModel.find()
+    const totalDestinations = await AirBnbDestinationsModel.countDocuments({
+      occupied: false,
+    });
+    const destinations = await AirBnbDestinationsModel.find({ occupied: false })
       .skip(skip)
       .limit(pageSize);
 
