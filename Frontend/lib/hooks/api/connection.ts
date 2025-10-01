@@ -63,8 +63,6 @@ class Connection {
   signup = (email: string, password: string, username: string, phone: number) =>
     this.post("users/signup", { email, password, username, phone });
 
-  logout = () => this.post("users/logout");
-
   post = (endpoint: string, data?: object) => {
     return new Promise((resolve, reject) => {
       const config = {
