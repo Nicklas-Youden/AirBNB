@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useApi } from "../hooks/api/useApi";
+import Connection from "../hooks/api/connection";
 
 type User = {
   id: string;
@@ -70,15 +71,15 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
         };
       };
 
-      if (loginResponse.token && loginResponse.user) {
+      if (loginResponse.token) {
         const userData: User = {
-          id: loginResponse.user.id || "1",
-          email: loginResponse.user.email || data.email,
+          id: loginResponse.user?.id || "1",
+          email: loginResponse.user?.email || data.email,
           username:
-            loginResponse.user.username ||
-            loginResponse.user.name ||
+            loginResponse.user?.username ||
+            loginResponse.user?.name ||
             data.email.split("@")[0],
-          phone: loginResponse.user.phone || 0,
+          phone: loginResponse.user?.phone || 0,
         };
 
         setUser(userData);
