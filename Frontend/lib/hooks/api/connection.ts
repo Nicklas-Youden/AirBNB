@@ -34,6 +34,8 @@ class Connection {
 
   getUserProfile = () => this.get(`users/profile`);
 
+  getBookings = () => this.get(`booking`);
+
   get = (endpoint: string, options?: object) => {
     return new Promise((resolve, reject) => {
       const config = {
@@ -52,6 +54,8 @@ class Connection {
   };
 
   createAirBNB = (data: object) => this.post("destinations", data);
+
+  createBooking = (data: object) => this.post("booking", data);
 
   login = (email: string, password: string) =>
     this.post("users/login", { email, password });
