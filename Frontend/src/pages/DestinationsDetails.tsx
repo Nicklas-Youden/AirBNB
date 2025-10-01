@@ -38,6 +38,7 @@ interface Destination {
     from: string;
     to: string;
   };
+  occupied: boolean;
 }
 
 interface UserProfile {
@@ -341,14 +342,25 @@ const DestinationDetail = () => {
             </div>
 
             {isAuthenticated ? (
-              <Button
-                size="large"
-                variant="contained"
-                className="w-full max-w-56"
-                onClick={handleBookingDialog}
-              >
-                Reserve
-              </Button>
+              destination.occupied ? (
+                <Button
+                  size="large"
+                  variant="contained"
+                  disabled
+                  className="w-full max-w-56"
+                >
+                  Occupied
+                </Button>
+              ) : (
+                <Button
+                  size="large"
+                  variant="contained"
+                  className="w-full max-w-56"
+                  onClick={handleBookingDialog}
+                >
+                  Reserve
+                </Button>
+              )
             ) : (
               <Button
                 size="large"
