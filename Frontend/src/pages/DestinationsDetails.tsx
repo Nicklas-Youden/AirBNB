@@ -60,11 +60,11 @@ const DestinationDetail = () => {
   const [showAllImages, setShowAllImages] = useState(false);
   const [openLoginDialog, setOpenLoginDialog] = useState(false);
   const [openBookingDialog, setOpenBookingDialog] = useState(false);
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState({
+    open: false,
+    error: false,
+  });
   const { isAuthenticated } = useAuthContext();
-
-  const handleBookingDialog = () => {
-    setOpenBookingDialog(true);
-  };
 
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,10 +80,12 @@ const DestinationDetail = () => {
         email,
         guests: parseInt(guests),
       });
-      setOpenBookingDialog(false);
       await fetchDestination();
+      setOpenBookingDialog(false);
+      setOpenConfirmationDialog({ open: true, error: false });
     } catch (error) {
       console.error("Booking error:", error);
+      setOpenConfirmationDialog({ open: true, error: true });
     }
   };
 
@@ -355,7 +357,7 @@ const DestinationDetail = () => {
                 size="large"
                 variant="contained"
                 className="w-full max-w-56"
-                onClick={handleBookingDialog}
+                onClick={() => setOpenBookingDialog(true)}
               >
                 Reserve
               </Button>
@@ -480,6 +482,43 @@ const DestinationDetail = () => {
           </Button>
           <Button onClick={() => setOpenBookingDialog(false)}>Close</Button>
         </DialogActions>
+      </Dialog>
+
+      <Dialog
+        maxWidth="sm"
+        fullWidth
+        open={openConfirmationDialog.open}
+        onClose={() => setOpenConfirmationDialog({ open: false, error: false })}
+      >
+        <div className="flex justify-center flex-col items-center p-8">
+          <DialogTitle>Booking Confirmation</DialogTitle>
+          <Icon
+            type={
+              openConfirmationDialog.error
+                ? "alertCircleOutline"
+                : "checkCircleOutline"
+            }
+            size="96"
+            className={` ${
+              openConfirmationDialog.error ? "fill-red-500" : "fill-green-500"
+            }`}
+          />
+          <DialogContent>
+            <p className="text-center text-lg">
+              {openConfirmationDialog.error
+                ? "There was an error processing your booking. Please try again."
+                : "Your booking was successful!"}
+            </p>
+          </DialogContent>
+          <Button
+            variant="outlined"
+            onClick={() =>
+              setOpenConfirmationDialog({ open: false, error: false })
+            }
+          >
+            Close
+          </Button>
+        </div>
       </Dialog>
     </>
   );
