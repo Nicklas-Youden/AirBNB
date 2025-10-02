@@ -65,7 +65,7 @@ class Connection {
     password: string,
     confirmPassword: string,
     name: string,
-    phone: number
+    phone: string
   ) =>
     this.post("users/signup", {
       email,

@@ -42,7 +42,7 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
     password: "",
     confirmPassword: "",
     name: "",
-    phone: 0,
+    phone: "",
   });
   const [error, setError] = useState("");
 
@@ -96,7 +96,7 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
       password: "",
       confirmPassword: "",
       name: "",
-      phone: 0,
+      phone: "",
     });
     setError("");
   };
@@ -151,9 +151,7 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
               label="Phone Number"
               type="tel"
               value={form.phone}
-              onChange={(e) =>
-                setForm({ ...form, phone: Number(e.target.value) })
-              }
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
               required
             />
           )}

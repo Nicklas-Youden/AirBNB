@@ -5,7 +5,7 @@ type Tuser = {
   id: string;
   email: string;
   name: string;
-  phone: number;
+  phone: string;
 };
 
 type Tsignup = {
@@ -13,7 +13,7 @@ type Tsignup = {
   password: string;
   confirmPassword: string;
   name: string;
-  phone: number;
+  phone: string;
 };
 
 type Tlogin = {
@@ -82,7 +82,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
           id?: string;
           email?: string;
           name?: string;
-          phone?: number;
+          phone?: string;
         };
       };
 
@@ -121,7 +121,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
           id?: string;
           email?: string;
           name?: string;
-          phone?: number;
+          phone?: string;
         };
       };
 
@@ -130,7 +130,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
           id: loginResponse.user?.id || "1",
           email: loginResponse.user?.email || data.email,
           name: loginResponse.user?.name || "",
-          phone: loginResponse.user?.phone || 0,
+          phone: loginResponse.user?.phone || "",
         };
 
         setUser(userData);
