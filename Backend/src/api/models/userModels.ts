@@ -2,21 +2,19 @@ import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 
 interface User extends Document {
-  username: string;
+  name: string;
   email: string;
   password: string;
   phone: number;
-  avatar?: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 const userSchema: Schema = new Schema(
   {
-    username: { type: String, required: true },
+    name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     phone: { type: Number, required: true },
-    avatar: { type: String, required: false },
   },
   {
     timestamps: true,

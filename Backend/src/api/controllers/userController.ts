@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { UserModel } from "../models/userModels";
 
+const isValidEmail = (email: string): boolean => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
   throw new Error("JWT_SECRET environment variable is not set.");
@@ -12,7 +16,21 @@ export const registerUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { username, email, password, phone, avatar } = req.body;
+    const { name, email, password, confirmPassword, phone } = req.body;
+
+    if (!name || !email || !password || !confirmPassword || !phone) {
+      res.status(400).json({
+        message: "All fields are required",
+      });
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      res.status(400).json({
+        message: "Invalid email format",
+      });
+      return;
+    }
 
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
@@ -22,12 +40,25 @@ export const registerUser = async (
       return;
     }
 
+    if (!/^[0-9]{8}$/.test(phone)) {
+      res.status(400).json({
+        message: "Phone number must be 8 digits long and numeric",
+      });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      res.status(400).json({
+        message: "Passwords do not match",
+      });
+      return;
+    }
+
     const user = new UserModel({
-      username,
+      name,
       email,
       password,
       phone,
-      avatar,
     });
 
     await user.save();
@@ -41,10 +72,9 @@ export const registerUser = async (
 
     res.status(201).json({
       id: user._id,
-      username: user.username,
+      name: user.name,
       email: user.email,
       phone: user.phone,
-      avatar: user.avatar,
 
       token,
     });
@@ -92,10 +122,9 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json({
       id: user._id,
-      username: user.username,
+      name: user.name,
       email: user.email,
       phone: user.phone,
-      avatar: user.avatar,
 
       token,
     });
@@ -124,10 +153,9 @@ export const getUserProfile = async (
 
     res.status(200).json({
       id: user._id,
-      username: user.username,
+      name: user.name,
       email: user.email,
       phone: user.phone,
-      avatar: user.avatar,
     });
   } catch (error) {
     console.error("Get profile error:", error);
@@ -143,11 +171,11 @@ export const updateUserProfile = async (
 ): Promise<void> => {
   try {
     const userId = req.user?.userId;
-    const { username, phone, avatar } = req.body;
+    const { name, phone } = req.body;
 
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
-      { username, phone, avatar },
+      { name, phone },
       { new: true, runValidators: true }
     ).select("-password");
 
@@ -160,10 +188,9 @@ export const updateUserProfile = async (
 
     res.status(200).json({
       id: updatedUser._id,
-      username: updatedUser.username,
+      name: updatedUser.name,
       email: updatedUser.email,
       phone: updatedUser.phone,
-      avatar: updatedUser.avatar,
     });
   } catch (error) {
     console.error("Update profile error:", error);

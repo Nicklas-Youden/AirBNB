@@ -11,7 +11,7 @@ import { authenticateToken } from "../../middleware/auth";
 const router = Router();
 
 // Public routes
-router.post("/register", registerUser);
+router.post("/signup", registerUser);
 router.post("/login", loginUser);
 
 // Protected routes (require authentication)
