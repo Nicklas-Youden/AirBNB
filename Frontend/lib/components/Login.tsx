@@ -6,6 +6,8 @@ import {
   TextField,
   Button,
   Box,
+  Typography,
+  Link,
 } from "@mui/material";
 
 import { useState } from "react";
@@ -34,7 +36,7 @@ interface LoginDialogProps {
 
 export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
   const authContext = useAuthContext();
-  const [isSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -81,10 +83,10 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
     setError("");
   };
 
-  //   const toggleMode = () => {
-  //     setIsSignUp(!isSignUp);
-  //     resetForm();
-  //   };
+  const toggleMode = () => {
+    setIsSignUp(!isSignUp);
+    resetForm();
+  };
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
@@ -159,15 +161,7 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
               helperText={error}
             />
           )}
-        </Box>
-      </DialogContent>
-      <div className="px-2 pb-3">
-        <DialogActions className="flex flex-col gap-2 ">
-          <Button variant="contained" size="large" onClick={handleSubmit}>
-            {isSignUp ? "Sign Up" : "Sign In"}
-          </Button>
-
-          {/* <Typography variant="body2" textAlign="center">
+          <Typography variant="body2" textAlign="center">
             {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
             <Link
               component="button"
@@ -177,7 +171,14 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
             >
               {isSignUp ? "Login" : "Sign Up"}
             </Link>
-          </Typography> */}
+          </Typography>
+        </Box>
+      </DialogContent>
+      <div className="px-2 pb-4">
+        <DialogActions className="flex flex-col gap-4 ">
+          <Button variant="contained" size="large" onClick={handleSubmit}>
+            {isSignUp ? "Sign Up" : "Sign In"}
+          </Button>
         </DialogActions>
       </div>
     </Dialog>
