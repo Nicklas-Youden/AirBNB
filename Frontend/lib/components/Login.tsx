@@ -37,11 +37,13 @@ interface LoginDialogProps {
 export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
   const authContext = useAuthContext();
   const [isSignUp, setIsSignUp] = useState(false);
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    name: "",
+    phone: "",
+  });
   const [error, setError] = useState("");
 
   const handleOnClose = () => {
@@ -52,14 +54,21 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSignUp) {
-      // resetForm();
-      // // Handle sign up logic
-      // console.log("Sign up:", { name, email, password, confirmPassword });
+      await authContext?.signup({
+        email: form.email,
+        password: form.password,
+        confirmPassword: form.confirmPassword,
+        name: form.name,
+        phone: form.phone,
+      });
+      handleOnClose();
+
+      resetForm();
     } else {
       try {
         await authContext?.login({
-          email,
-          password,
+          email: form.email,
+          password: form.password,
           remember_me: true,
         });
         handleOnClose();
@@ -69,17 +78,19 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
           message?: string;
         };
         setError(err.response?.data?.message || err.message || "Login failed");
-        setPassword("");
+        setForm((prev) => ({ ...prev, password: "" }));
       }
     }
   };
 
   const resetForm = () => {
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
-    setName("");
-    setPhone("");
+    setForm({
+      email: "",
+      password: "",
+      confirmPassword: "",
+      name: "",
+      phone: "",
+    });
     setError("");
   };
 
@@ -97,6 +108,11 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
       </DialogTitle>
 
       <DialogContent>
+        {error && (
+          <Box className="px-4">
+            <p className="text-red-500 text-center">{error}</p>
+          </Box>
+        )}
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -107,11 +123,10 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
               fullWidth
               label="Full Name"
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={form.name}
+              name="name"
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
-              error={!!error}
-              helperText={error}
             />
           )}
 
@@ -119,22 +134,18 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
             fullWidth
             label="Email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
             required
-            error={!!error}
-            helperText={error}
           />
           {isSignUp && (
             <TextField
               fullWidth
               label="Phone Number"
               type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
               required
-              error={!!error}
-              helperText={error}
             />
           )}
 
@@ -142,11 +153,9 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
             fullWidth
             label="Password"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
             required
-            error={!!error}
-            helperText={error}
           />
 
           {isSignUp && (
@@ -154,11 +163,11 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
               fullWidth
               label="Confirm Password"
               type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={form.confirmPassword}
+              onChange={(e) =>
+                setForm({ ...form, confirmPassword: e.target.value })
+              }
               required
-              error={!!error}
-              helperText={error}
             />
           )}
           <Typography variant="body2" textAlign="center">
