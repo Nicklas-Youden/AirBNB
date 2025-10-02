@@ -45,7 +45,7 @@ interface UserProfile {
   id: string;
   email: string;
   name: string;
-  phone: number;
+  phone: string;
 }
 
 const DestinationDetail = () => {
