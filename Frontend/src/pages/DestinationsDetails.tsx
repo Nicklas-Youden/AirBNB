@@ -19,7 +19,7 @@ import {
 import Icon from "../../lib/icon/icon";
 
 interface Destination {
-  id: string | number;
+  id: string;
   title: string;
   description: string;
   images: string[];

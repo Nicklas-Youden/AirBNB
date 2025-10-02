@@ -88,7 +88,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (signupResponse.token) {
         const userData: Tuser = {
-          id: signupResponse.user?.id || "1",
+          id: signupResponse.user?.id || "",
           email: signupResponse.user?.email || data.email,
           name: signupResponse.user?.name || data.name,
           phone: signupResponse.user?.phone ?? data.phone,
@@ -127,7 +127,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (loginResponse.token) {
         const userData: Tuser = {
-          id: loginResponse.user?.id || "1",
+          id: loginResponse.user?.id || "",
           email: loginResponse.user?.email || data.email,
           name: loginResponse.user?.name || "",
           phone: loginResponse.user?.phone || "",
