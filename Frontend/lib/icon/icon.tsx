@@ -8,6 +8,8 @@ import {
   mdiBedDoubleOutline,
   mdiAccountCircleOutline,
   mdiFloorPlan,
+  mdiCheckCircleOutline,
+  mdiAlertCircleOutline,
 } from "@mdi/js";
 import MdiIcon from "@mdi/react";
 import React from "react";
@@ -22,6 +24,8 @@ const mdiIconPaths = {
   homeOutline: mdiHomeOutline,
   bedDoubleOutline: mdiBedDoubleOutline,
   floorPlan: mdiFloorPlan,
+  checkCircleOutline: mdiCheckCircleOutline,
+  alertCircleOutline: mdiAlertCircleOutline,
 };
 
 const calculateSize: (tempSize: string | number) => string | number = (
