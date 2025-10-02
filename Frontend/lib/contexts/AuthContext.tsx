@@ -91,7 +91,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
           id: signupResponse.user?.id || "1",
           email: signupResponse.user?.email || data.email,
           name: signupResponse.user?.name || data.name,
-          phone: signupResponse.user?.phone || parseInt(data.phone),
+          phone: signupResponse.user?.phone ?? data.phone,
         };
 
         setUser(userData);
