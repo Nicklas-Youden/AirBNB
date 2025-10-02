@@ -54,22 +54,13 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSignUp) {
-      await authContext?.signup({
-        email: form.email,
-        password: form.password,
-        confirmPassword: form.confirmPassword,
-        name: form.name,
-        phone: form.phone,
-      });
-      handleOnClose();
-
-      resetForm();
-    } else {
       try {
-        await authContext?.login({
+        await authContext?.signup({
           email: form.email,
           password: form.password,
-          remember_me: true,
+          confirmPassword: form.confirmPassword,
+          name: form.name,
+          phone: form.phone,
         });
         handleOnClose();
       } catch (error: unknown) {
@@ -77,7 +68,23 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
           response?: { data?: { message?: string } };
           message?: string;
         };
-        setError(err.response?.data?.message || err.message || "Login failed");
+        setError(err.response?.data?.message || "Signup failed");
+      }
+
+      // resetForm();
+    } else {
+      try {
+        await authContext?.login({
+          email: form.email,
+          password: form.password,
+        });
+        handleOnClose();
+      } catch (error: unknown) {
+        const err = error as {
+          response?: { data?: { message?: string } };
+          message?: string;
+        };
+        setError(err.response?.data?.message || "Login failed");
         setForm((prev) => ({ ...prev, password: "" }));
       }
     }
