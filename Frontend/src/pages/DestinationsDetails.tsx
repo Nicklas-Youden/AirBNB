@@ -19,7 +19,7 @@ import {
 import Icon from "../../lib/icon/icon";
 
 interface Destination {
-  id: string | number;
+  id: string;
   title: string;
   description: string;
   images: string[];
@@ -44,8 +44,8 @@ interface Destination {
 interface UserProfile {
   id: string;
   email: string;
-  username: string;
-  phone: number;
+  name: string;
+  phone: string;
 }
 
 const DestinationDetail = () => {

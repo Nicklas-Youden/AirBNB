@@ -60,8 +60,20 @@ class Connection {
   login = (email: string, password: string) =>
     this.post("users/login", { email, password });
 
-  signup = (email: string, password: string, username: string, phone: number) =>
-    this.post("users/signup", { email, password, username, phone });
+  signup = (
+    email: string,
+    password: string,
+    confirmPassword: string,
+    name: string,
+    phone: string
+  ) =>
+    this.post("users/signup", {
+      email,
+      password,
+      confirmPassword,
+      name,
+      phone,
+    });
 
   post = (endpoint: string, data?: object) => {
     return new Promise((resolve, reject) => {
