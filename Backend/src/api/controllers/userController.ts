@@ -171,11 +171,11 @@ export const updateUserProfile = async (
 ): Promise<void> => {
   try {
     const userId = req.user?.userId;
-    const { name, phone, avatar } = req.body;
+    const { name, phone } = req.body;
 
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
-      { name, phone, avatar },
+      { name, phone },
       { new: true, runValidators: true }
     ).select("-password");
 
