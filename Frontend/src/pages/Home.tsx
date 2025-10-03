@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import Icon from "../../lib/icon/icon";
-import { formatPeriod, useApi } from "../../lib";
+import { useApi } from "../../lib";
+import DestinationCard from "../components/DestinationCard";
 
 interface Listing {
   _id: string;
@@ -108,60 +108,11 @@ const Home = () => {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {airBnbs.map((listing) => (
-              <div
+              <DestinationCard
                 key={listing._id}
-                onClick={() => handleCardClick(listing._id)}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-              >
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  {listing.images.length > 0 ? (
-                    <img
-                      src={listing.images[0]}
-                      alt={listing.title + " Image"}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <Icon
-                      type="imageOffOutline"
-                      size="96"
-                      className="fill-gray-400"
-                    />
-                  )}
-                </div>
-                <div className="p-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">{listing.title}</h3>
-                    <div className="flex items-center">
-                      <Icon type="star" size="small" className="inline-block" />
-                      {listing.rating}
-                    </div>
-                  </div>
-                  <p className="text-gray-500">
-                    {listing.city}, {listing.country}
-                  </p>
-                  <div className="flex gap-0.5 items-center">
-                    <p className="text-gray-500">${listing.price} ·</p>
-                    <p className="text-gray-500 text-sm">
-                      {formatPeriod(
-                        listing.available.from,
-                        listing.available.to,
-                        true
-                      )}
-                    </p>
-                  </div>
-                  <p className="text-gray-500 text-sm flex items-center">
-                    <span className="text-black text-base">
-                      {listing.maxGuests}
-                    </span>
-                    <Icon
-                      type="accountOutline"
-                      size="medium"
-                      className="inline-block mr-1 center"
-                    />
-                    · {listing.roomType}
-                  </p>
-                </div>
-              </div>
+                listing={listing}
+                onClick={handleCardClick}
+              />
             ))}
           </div>
 
