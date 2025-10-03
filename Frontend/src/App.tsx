@@ -7,6 +7,7 @@ import { UserLoginIcon } from "../lib/components/Login";
 import { AuthContextProvider } from "../lib/contexts/AuthContext";
 import { useAuthContext } from "../lib";
 import { UserHeaderIcon } from "../lib/components/UserIcon";
+import Bookings from "./pages/Bookings";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const Content = () => {
             path="/destinations/:destinationId"
             element={<DestinationDetail />}
           />
+          <Route path="/bookings" element={<Bookings />} />
         </Routes>
       </main>
     </div>

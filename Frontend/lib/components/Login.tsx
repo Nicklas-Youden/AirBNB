@@ -109,9 +109,9 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>
-        <h2 className="text-center text-2xl font-medium">
+        <p className="text-center text-2xl font-medium">
           CapaBNB {isSignUp ? "sign up" : "login"}
-        </h2>
+        </p>
       </DialogTitle>
 
       <DialogContent>
