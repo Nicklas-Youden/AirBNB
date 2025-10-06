@@ -6,10 +6,9 @@ export const getAllDestinations = async (req: Request, res: Response) => {
   try {
     // Extract pagination parameters from query
     const pageNumber = parseInt(req.query.pageNumber as string) || 1;
-    const pageSize = parseInt(req.query.pageSize as string) || 10;
+    const pageSize = parseInt(req.query.pageSize as string) || 50;
     const skip = (pageNumber - 1) * pageSize;
 
-    // Get total count and destinations
     const totalDestinations = await AirBnbDestinationsModel.countDocuments({
       occupied: false,
     });

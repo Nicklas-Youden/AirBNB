@@ -6,14 +6,27 @@ export const getUserBookings = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
 
+    // Extract pagination parameters from query
+    const pageNumber = parseInt(req.query.pageNumber as string) || 1;
+    const pageSize = parseInt(req.query.pageSize as string) || 50;
+    const skip = (pageNumber - 1) * pageSize;
+
+    // Get total count of user's bookings
+    const totalBookings = await BookingModel.countDocuments({ userId });
+
     const bookings = await BookingModel.aggregate([
       {
         $match: { userId },
       },
       {
+        $addFields: {
+          destinationObjectId: { $toObjectId: "$destinationId" },
+        },
+      },
+      {
         $lookup: {
           from: "airbnbdestinations",
-          localField: "destinationId",
+          localField: "destinationObjectId",
           foreignField: "_id",
           as: "destinationDetails",
         },
@@ -21,9 +34,34 @@ export const getUserBookings = async (req: Request, res: Response) => {
       {
         $unwind: "$destinationDetails",
       },
+      {
+        $replaceRoot: {
+          newRoot: "$destinationDetails",
+        },
+      },
+      {
+        $skip: skip,
+      },
+      {
+        $limit: pageSize,
+      },
     ]);
 
-    res.status(200).json({ success: true, bookings });
+    const totalPages = Math.ceil(totalBookings / pageSize);
+
+    const paging = {
+      pageNumber,
+      pageSize,
+      totalCount: totalBookings,
+      totalPages,
+      isFirstPage: pageNumber === 1,
+      isLastPage: pageNumber === totalPages,
+    };
+
+    res.status(200).json({
+      bookings,
+      paging,
+    });
   } catch (error) {
     res
       .status(500)

@@ -20,6 +20,7 @@ interface AirBnbDestination {
   beds: number;
   //   reviews: { user: string; comment: string; rating: number }[];
   availability: { from: Date; to: Date }[];
+  occupied?: boolean;
 }
 
 const airBnbDestinations: Schema = new Schema({
