@@ -81,7 +81,7 @@ const Home = () => {
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="">
       {loading && (
         <div className="text-center py-8">
           <p className="text-gray-600">Loading CapaBNBs...</p>

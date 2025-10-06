@@ -229,7 +229,7 @@ const DestinationDetail = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className=" px-4 py-8">
         <div className="text-center py-8">
           <p className="text-gray-600">Loading destination details...</p>
         </div>
@@ -239,7 +239,7 @@ const DestinationDetail = () => {
 
   if (error || !destination) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className=" px-4 py-8">
         <div className="text-center py-8">
           <p className="text-red-600  font-bold">
             {error || "Destination not found"}
