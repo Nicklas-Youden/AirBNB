@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApi } from "../../lib";
 import DestinationCard from "../components/DestinationCard";
+import Paging from "../components/paging";
 
 interface Listing {
   _id: string;
@@ -75,23 +76,6 @@ const Home = () => {
     fetchAirBnbs(pageNumber);
   };
 
-  const getPaginationPages = (
-    currentPage: number,
-    totalPages: number,
-    maxPages: number = 10
-  ): number[] => {
-    if (totalPages <= maxPages) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
-    }
-    let start = Math.max(1, currentPage - Math.floor(maxPages / 2));
-    let end = start + maxPages - 1;
-    if (end > totalPages) {
-      end = totalPages;
-      start = Math.max(1, end - maxPages + 1);
-    }
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  };
-
   const handleCardClick = (id: string | number) => {
     navigate(`/destinations/${id}`);
   };
@@ -116,25 +100,11 @@ const Home = () => {
             ))}
           </div>
 
-          <div className="mt-8 flex justify-center items-center space-x-2">
-            <div className="flex space-x-1">
-              {getPaginationPages(currentPage, paging.totalPages).map(
-                (pageNum) => (
-                  <button
-                    key={pageNum}
-                    onClick={() => handlePageChange(pageNum)}
-                    className={`px-3 py-2 border rounded-md ${
-                      pageNum === currentPage
-                        ? "bg-gray-100 border-gray-300"
-                        : "border-gray-300 hover:bg-gray-50"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                )
-              )}
-            </div>
-          </div>
+          <Paging
+            currentPage={currentPage}
+            totalPages={paging.totalPages}
+            onPageChange={handlePageChange}
+          />
         </>
       )}
     </div>
