@@ -26,7 +26,7 @@ class Connection {
 
     return headers;
   };
-  getAirBNBs = (params?: Record<string, string | number>) => {
+  getAirBNBs = (params?: Record<string, string | number | boolean>) => {
     return this.get(`destinations`, params ? { params } : undefined);
   };
 
@@ -34,7 +34,8 @@ class Connection {
 
   getUserProfile = () => this.get(`users/profile`);
 
-  getBookings = () => this.get(`booking`);
+  getBookings = (params?: Record<string, string | number | boolean>) =>
+    this.get(`booking`, { params });
 
   get = (endpoint: string, options?: object) => {
     return new Promise((resolve, reject) => {
