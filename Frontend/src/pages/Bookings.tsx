@@ -59,7 +59,7 @@ const Bookings = () => {
           setPaging(response.paging);
         }
       } catch (err) {
-        console.error("Error fetching airBnbs:", err);
+        console.error("Error fetching bookings:", err);
       } finally {
         setLoading(false);
       }
