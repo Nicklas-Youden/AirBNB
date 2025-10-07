@@ -1,6 +1,12 @@
 import "./App.css";
 
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
 import Home from "./pages/Home";
 import DestinationDetail from "./pages/DestinationsDetails";
 import { UserLoginIcon } from "../lib/components/Login";
@@ -8,6 +14,7 @@ import { AuthContextProvider } from "../lib/contexts/AuthContext";
 import { useAuthContext } from "../lib";
 import { UserHeaderIcon } from "../lib/components/UserIcon";
 import Bookings from "./pages/Bookings";
+import type { ReactNode } from "react";
 
 const App = () => {
   return (
@@ -22,6 +29,11 @@ const App = () => {
   );
 };
 
+const ProtectedRoute = ({ children }: { children: ReactNode }) => {
+  const { isAuthenticated } = useAuthContext();
+  return isAuthenticated ? <>{children}</> : <Navigate to="/" replace />;
+};
+
 const Content = () => {
   return (
     <div className="App mx-10 lg:mx-15">
@@ -32,7 +44,14 @@ const Content = () => {
             path="/destinations/:destinationId"
             element={<DestinationDetail />}
           />
-          <Route path="/bookings" element={<Bookings />} />
+          <Route
+            path="/bookings"
+            element={
+              <ProtectedRoute>
+                <Bookings />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
     </div>
