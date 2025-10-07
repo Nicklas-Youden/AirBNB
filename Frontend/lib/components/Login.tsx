@@ -183,7 +183,7 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
               component="button"
               variant="body2"
               onClick={toggleMode}
-              sx={{ cursor: "pointer" }}
+              className="cursor-pointer"
             >
               {isSignUp ? "Login" : "Sign Up"}
             </Link>

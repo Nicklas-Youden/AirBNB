@@ -11,6 +11,7 @@ import {
   mdiCheckCircleOutline,
   mdiAlertCircleOutline,
   mdiBookCancelOutline,
+  mdiCheck,
 } from "@mdi/js";
 import MdiIcon from "@mdi/react";
 import React from "react";
@@ -28,6 +29,7 @@ const mdiIconPaths = {
   checkCircleOutline: mdiCheckCircleOutline,
   alertCircleOutline: mdiAlertCircleOutline,
   bookCancelOutline: mdiBookCancelOutline,
+  check: mdiCheck,
 };
 
 const calculateSize: (tempSize: string | number) => string | number = (
