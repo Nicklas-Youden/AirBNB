@@ -421,14 +421,11 @@ const DestinationDetail = () => {
             </span>
           </DialogContentText>
           <DialogContentText>
-            <p className="text-md">
-              Price:{" "}
-              <span className="  text-gray-700">${destination.price}</span>
-            </p>
+            Price: <span className="text-gray-700">${destination.price}</span>
           </DialogContentText>
           <DialogContentText>
             Availability:{" "}
-            <span className=" text-gray-700 ">
+            <span className="text-gray-700">
               {formatPeriodWithWeekday(
                 destination.available.from,
                 destination.available.to
@@ -437,7 +434,7 @@ const DestinationDetail = () => {
           </DialogContentText>
           <DialogContentText>
             Address:{" "}
-            <span className=" text-gray-700">{destination.address}</span>
+            <span className="text-gray-700">{destination.address}</span>
           </DialogContentText>
 
           <form onSubmit={handleBooking} id="booking-form">
