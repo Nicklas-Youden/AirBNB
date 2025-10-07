@@ -444,7 +444,7 @@ const DestinationDetail = () => {
                 id="email"
                 label="Email"
                 variant="outlined"
-                defaultValue={user?.email || ""}
+                defaultValue={user?.email}
                 fullWidth
                 required
               />
