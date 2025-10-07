@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Link,
   TextField,
 } from "@mui/material";
 import Icon from "../../lib/icon/icon";
@@ -231,13 +232,9 @@ const DestinationDetail = () => {
             {error || "Destination not found"}
           </p>
           <div className="mt-4">
-            <Button
-              onClick={() => navigate("/")}
-              variant="outlined"
-              color="primary"
-            >
+            <Link className="cursor-pointer" onClick={() => navigate("/")}>
               Back to Home
-            </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -504,6 +501,12 @@ const DestinationDetail = () => {
                 : "Your booking was successful!"}
             </p>
           </DialogContent>
+          <Link
+            onClick={() => navigate("/bookings")}
+            className=" mb-2 cursor-pointer "
+          >
+            See your bookings
+          </Link>
           <Button
             variant="outlined"
             onClick={() =>
