@@ -178,14 +178,14 @@ export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
             />
           )}
           <Typography variant="body2" textAlign="center">
-            {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+            {isSignUp ? "Already have an account?" : "Don't have an account?"}
             <Link
               component="button"
               variant="body2"
               onClick={toggleMode}
               className="cursor-pointer"
             >
-              {isSignUp ? "Login" : "Sign Up"}
+              {isSignUp ? "Sign In" : "Sign Up"}
             </Link>
           </Typography>
         </Box>
