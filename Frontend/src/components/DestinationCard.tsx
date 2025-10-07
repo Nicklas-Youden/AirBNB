@@ -51,20 +51,18 @@ const DestinationCard = ({ listing, onClick }: DestinationCardProps) => {
         <p className="text-gray-500">
           {listing.city}, {listing.country}
         </p>
-        <div className="flex gap-0.5 items-center">
-          <p className="text-gray-500">${listing.price} ·</p>
+        <div className="flex gap-1 items-center">
+          <p className="text-gray-800">
+            ${listing.price} <span className="text-gray-500">·</span>
+          </p>
           <p className="text-gray-500 text-sm">
             {formatPeriod(listing.available.from, listing.available.to, true)}
           </p>
         </div>
         <p className="text-gray-500 text-sm flex items-center">
-          <span className="text-black text-base">{listing.maxGuests}</span>
-          <Icon
-            type="accountOutline"
-            size="medium"
-            className="inline-block mr-1 center"
-          />
-          · {listing.roomType}
+          <span className="text-gray-800 text-base">{listing.maxGuests}</span>
+          <Icon type="accountOutline" size="medium" className="mr-1 center" />·{" "}
+          {listing.roomType}
         </p>
       </div>
     </div>
