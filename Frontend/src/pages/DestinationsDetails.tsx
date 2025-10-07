@@ -430,18 +430,29 @@ const DestinationDetail = () => {
         <DialogTitle>Booking</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <span className="font-bold text-lg">{destination.title}</span>
+            <span className="font-bold text-lg text-gray-700">
+              {destination.title}
+            </span>
           </DialogContentText>
-
-          <DialogContentText>Price: ${destination.price}</DialogContentText>
+          <DialogContentText>
+            <p className="text-md">
+              Price:{" "}
+              <span className="  text-gray-700">${destination.price}</span>
+            </p>
+          </DialogContentText>
           <DialogContentText>
             Availability:{" "}
-            {formatPeriodWithWeekday(
-              destination.available.from,
-              destination.available.to
-            )}
+            <span className=" text-gray-700 ">
+              {formatPeriodWithWeekday(
+                destination.available.from,
+                destination.available.to
+              )}
+            </span>
           </DialogContentText>
-          <DialogContentText>Address: {destination.address}</DialogContentText>
+          <DialogContentText>
+            Address:{" "}
+            <span className=" text-gray-700">{destination.address}</span>
+          </DialogContentText>
 
           <form onSubmit={handleBooking} id="booking-form">
             <div className="flex gap-4 pt-4">
