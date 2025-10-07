@@ -180,27 +180,13 @@ const DestinationDetail = () => {
               alt={destination.title}
               className="w-full h-full object-cover"
             />
+
             <Button
               variant="contained"
               color="info"
               size="small"
               onClick={() => setShowAllImages(true)}
-              sx={{
-                position: "absolute",
-                bottom: "8px",
-                right: "8px",
-                zIndex: 10,
-                backgroundColor: "rgba(255, 255, 255, 0.9)",
-                color: "#000",
-                fontSize: "12px",
-                fontWeight: 500,
-                padding: "4px 8px",
-                minWidth: "auto",
-                textTransform: "none",
-                "&:hover": {
-                  backgroundColor: "rgba(255, 255, 255, 1)",
-                },
-              }}
+              className="absolute bottom-2 right-2 z-10 bg-white/90 text-black text-xs font-medium px-2 py-1 min-w-auto capitalize hover:bg-white"
             >
               Show all pictures
             </Button>
@@ -291,7 +277,7 @@ const DestinationDetail = () => {
                 <Icon
                   type="homeOutline"
                   size="medium"
-                  className="inline-block"
+                  className="inline-block "
                 />
               </span>
               •
