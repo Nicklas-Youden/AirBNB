@@ -65,6 +65,10 @@ const DestinationDetail = () => {
     open: false,
     error: false,
   });
+  const [bookingDetails, setBookingDetails] = useState({
+    email: "",
+    guests: 0,
+  });
   const { isAuthenticated } = useAuthContext();
 
   const handleBooking = async (e: React.FormEvent) => {
@@ -73,6 +77,12 @@ const DestinationDetail = () => {
     const formData = new FormData(e.target as HTMLFormElement);
     const email = formData.get("email") as string;
     const guests = formData.get("guests") as string;
+
+    // Store booking details for confirmation dialog
+    setBookingDetails({
+      email,
+      guests: parseInt(guests),
+    });
 
     try {
       await api.createBooking({
@@ -495,26 +505,70 @@ const DestinationDetail = () => {
             }`}
           />
           <DialogContent>
-            <p className="text-center text-lg">
+            <p className="text-lg mb-6">
               {openConfirmationDialog.error
                 ? "There was an error processing your booking. Please try again."
                 : "Your booking was successful!"}
             </p>
+            {!openConfirmationDialog.error &&
+              destination &&
+              (() => {
+                const bookingInfo = [
+                  { label: null, value: destination.title, isTitle: true },
+                  { label: "Email:", value: bookingDetails.email },
+                  { label: "Amount of Guests:", value: bookingDetails.guests },
+                  {
+                    label: "Time and Date:",
+                    value: formatPeriodWithWeekday(
+                      destination.available.from,
+                      destination.available.to
+                    ),
+                  },
+                  {
+                    label: "Address:",
+                    value: `${destination.address}, ${destination.city}, ${destination.country}`,
+                  },
+                  { label: "Price:", value: `$${destination.price}` },
+                ];
+
+                return (
+                  <div className="space-y-4 text-md w-full">
+                    {bookingInfo.map((info, index) => (
+                      <div key={index}>
+                        {info.label && (
+                          <div className="font-medium">{info.label}</div>
+                        )}
+                        <div
+                          className={`text-gray-700 border-gray-300 border-solid border-b pb-2 ${
+                            info.isTitle ? "text-lg font-semibold" : ""
+                          }`}
+                        >
+                          {info.value}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
           </DialogContent>
-          <Link
-            onClick={() => navigate("/bookings")}
-            className=" mb-2 cursor-pointer "
-          >
-            See your bookings
-          </Link>
-          <Button
-            variant="outlined"
-            onClick={() =>
-              setOpenConfirmationDialog({ open: false, error: false })
-            }
-          >
-            Close
-          </Button>
+          <div className="flex justify-center gap-4 w-full mt-6">
+            <Button
+              variant="outlined"
+              onClick={() => navigate("/bookings")}
+              className="flex-1 max-w-48"
+            >
+              Your Bookings
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() =>
+                setOpenConfirmationDialog({ open: false, error: false })
+              }
+              className="flex-1 max-w-48"
+            >
+              Close
+            </Button>
+          </div>
         </div>
       </Dialog>
     </>
