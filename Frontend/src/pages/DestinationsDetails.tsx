@@ -255,16 +255,16 @@ const DestinationDetail = () => {
             <h1 className="text-3xl font-bold text-gray-800">
               {destination.title}
             </h1>
-            <div className="flex items-center">
+            <div className="flex items-center text-lg font-medium">
               <Icon type="star" size="medium" className="mr-1" />
-              <span className="text-lg font-medium">{destination.rating}</span>
+              {destination.rating}
             </div>
           </div>
 
           <div className="border-b pb-2 border-b-gray-300">
             <div className="flex flex-wrap gap-4 text-gray-800">
               <span className="flex self-center gap-1">
-                {destination.maxGuests}{" "}
+                {destination.maxGuests}
                 <Icon
                   type="accountOutline"
                   size="medium"
@@ -273,7 +273,7 @@ const DestinationDetail = () => {
               </span>
               •
               <span className="flex self-center gap-1">
-                {destination.bedRooms}{" "}
+                {destination.bedRooms}
                 <Icon
                   type="homeOutline"
                   size="medium"
@@ -282,7 +282,7 @@ const DestinationDetail = () => {
               </span>
               •
               <span className="flex self-center gap-1">
-                {destination.beds}{" "}
+                {destination.beds}
                 <Icon
                   type="bedDoubleOutline"
                   size="medium"
@@ -291,7 +291,7 @@ const DestinationDetail = () => {
               </span>
               •
               <span className="flex self-center gap-1">
-                {destination.bathRooms}{" "}
+                {destination.bathRooms}
                 <Icon type="toilet" size="medium" className="inline-block" />
               </span>
             </div>
@@ -369,9 +369,9 @@ const DestinationDetail = () => {
           <h3 className="text-xl font-semibold mb-4">Amenities</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 pb-8 gap-4">
             {destination.amenities.map((amenity, index) => (
-              <div key={index} className="flex items-center">
-                <span className="mr-2 text-green-500">✓</span>
-                <span className="text-gray-800">{amenity}</span>
+              <div key={index} className="flex items-center text-gray-800">
+                <Icon type="check" className="mr-2 fill-green-500" />
+                {amenity}
               </div>
             ))}
           </div>
