@@ -15,6 +15,7 @@ import { useAuthContext } from "../lib";
 import { UserHeaderIcon } from "../lib/components/UserIcon";
 import Bookings from "./pages/Bookings";
 import type { ReactNode } from "react";
+import Host from "./pages/Host";
 
 const App = () => {
   return (
@@ -49,6 +50,14 @@ const Content = () => {
             element={
               <ProtectedRoute>
                 <Bookings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/host"
+            element={
+              <ProtectedRoute>
+                <Host />
               </ProtectedRoute>
             }
           />
