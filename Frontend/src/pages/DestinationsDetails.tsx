@@ -358,7 +358,7 @@ const DestinationDetail = () => {
               <Button
                 size="large"
                 variant="contained"
-                className="w-full max-w-56"
+                className="w-full max-w-56 bg-gradient-to-r to-purple-800 from-purple-900 rounded-lg text-white hover:opacity-90"
                 onClick={() => setOpenLoginDialog(true)}
               >
                 Login to Reserve

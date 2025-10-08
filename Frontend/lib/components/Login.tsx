@@ -18,7 +18,11 @@ export const UserLoginIcon = () => {
 
   return (
     <>
-      <Button onClick={() => setOpenLoginDialog(true)} variant="contained">
+      <Button
+        onClick={() => setOpenLoginDialog(true)}
+        variant="contained"
+        className="bg-gradient-to-r to-purple-800 from-purple-900 rounded-lg text-white hover:opacity-90"
+      >
         Sign in
       </Button>
       <LoginDialog

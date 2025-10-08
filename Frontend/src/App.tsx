@@ -16,6 +16,7 @@ import { UserHeaderIcon } from "../lib/components/UserIcon";
 import Bookings from "./pages/Bookings";
 import type { ReactNode } from "react";
 import Host from "./pages/Host";
+import { Button } from "@mui/material";
 
 const App = () => {
   return (
@@ -77,11 +78,22 @@ const Header = () => {
       <div className=" flex justify-between items-center max-w-[1500px] mx-auto">
         <h1
           onClick={() => navigate("/")}
-          className="text-3xl font-bold text-gray-800 cursor-pointer w-fit"
+          className="text-3xl font-bold bg-gradient-to-r from-purple-800 to-purple-900 bg-clip-text text-transparent cursor-pointer w-fit transition-all duration-300"
         >
           CapaBNB
         </h1>
-        {isAuthenticated ? <UserHeaderIcon /> : <UserLoginIcon />}
+
+        <div className="flex items-center gap-4">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate("/host")}
+            className="bg-gradient-to-r to-purple-800 from-purple-900 rounded-lg text-white hover:opacity-90 normal-case"
+          >
+            Host BNB
+          </Button>
+          {isAuthenticated ? <UserHeaderIcon /> : <UserLoginIcon />}
+        </div>
       </div>
     </div>
   );

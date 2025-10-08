@@ -39,7 +39,7 @@ export const UserHeaderIcon = () => {
         <Icon
           type="accountCircleOutline"
           size="large"
-          className="inline-block"
+          className="inline-block fill-purple-800"
         />
       </IconButton>
 
