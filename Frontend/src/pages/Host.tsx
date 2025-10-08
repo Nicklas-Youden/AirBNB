@@ -198,11 +198,7 @@ const Host = () => {
             </Typography>
             <div className="space-y-4">
               <TextField
-                className="
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                className="purple-field"
                 fullWidth
                 label="Property Title"
                 value={formData.title}
@@ -211,11 +207,7 @@ const Host = () => {
               />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormControl
-                  fullWidth
-                  required
-                  className="[&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300 [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500 [&_.MuiInputLabel-root]:text-purple-500 [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
-                >
+                <FormControl fullWidth required className="purple-field">
                   <InputLabel>Room Type</InputLabel>
                   <Select
                     value={formData.roomType}
@@ -240,11 +232,7 @@ const Host = () => {
                 </FormControl>
 
                 <TextField
-                  className="
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                  className="purple-field"
                   fullWidth
                   label="Price full stay"
                   type="number"
@@ -267,11 +255,7 @@ const Host = () => {
               </div>
 
               <TextField
-                className="
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                className="purple-field"
                 fullWidth
                 label="Description"
                 multiline
@@ -291,11 +275,7 @@ const Host = () => {
             </Typography>
             <div className="space-y-4">
               <TextField
-                className="
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                className="purple-field"
                 fullWidth
                 label="Address"
                 value={formData.address}
@@ -304,11 +284,7 @@ const Host = () => {
               />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <TextField
-                  className="
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                  className="purple-field"
                   fullWidth
                   label="City"
                   value={formData.city}
@@ -316,11 +292,7 @@ const Host = () => {
                   required
                 />
                 <TextField
-                  className="
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                  className="purple-field"
                   fullWidth
                   label="Country"
                   value={formData.country}
@@ -337,11 +309,7 @@ const Host = () => {
             </Typography>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <TextField
-                className="
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                className="purple-field"
                 fullWidth
                 label="Max Guests"
                 type="number"
@@ -357,11 +325,7 @@ const Host = () => {
                 }}
               />
               <TextField
-                className="
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                className="purple-field"
                 fullWidth
                 label="Bedrooms"
                 type="number"
@@ -377,11 +341,7 @@ const Host = () => {
                 }}
               />
               <TextField
-                className="
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                className="purple-field"
                 fullWidth
                 label="Bathrooms"
                 type="number"
@@ -397,11 +357,7 @@ const Host = () => {
                 }}
               />
               <TextField
-                className="
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                className="purple-field"
                 fullWidth
                 label="Beds"
                 type="number"
@@ -425,11 +381,7 @@ const Host = () => {
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <TextField
-                className="
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                className="purple-field"
                 fullWidth
                 label="Available From"
                 type="date"
@@ -444,11 +396,7 @@ const Host = () => {
                 }}
               />
               <TextField
-                className="
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                className="purple-field"
                 fullWidth
                 label="Available To"
                 type="date"
@@ -538,11 +486,7 @@ const Host = () => {
                 placeholder="Custom amenity"
                 value={newAmenity}
                 onChange={(e) => setNewAmenity(e.target.value)}
-                className="flex-1
-             [&_.MuiOutlinedInput-root_.MuiOutlinedInput-notchedOutline]:border-purple-300
-             [&_.MuiOutlinedInput-root.Mui-focused_.MuiOutlinedInput-notchedOutline]:border-purple-500
-             [&_.MuiInputLabel-root]:text-purple-500
-             [&_.MuiInputLabel-root.Mui-focused]:text-purple-500"
+                className="flex-1 purple-field"
               />
               <Button
                 onClick={() => addAmenity(newAmenity)}
