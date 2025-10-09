@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import {
   Button,
@@ -23,7 +23,6 @@ interface HostFormData {
   city: string;
   country: string;
   price: number;
-  images: string[];
   amenities: string[];
   maxGuests: number;
   bedRooms: number;
@@ -35,6 +34,11 @@ interface HostFormData {
   };
 }
 
+interface ImagePreview {
+  file: File;
+  previewUrl: string;
+}
+
 const Host = () => {
   const [formData, setFormData] = useState<HostFormData>({
     title: "",
@@ -44,7 +48,6 @@ const Host = () => {
     city: "",
     country: "",
     price: 0,
-    images: [],
     amenities: [],
     maxGuests: 0,
     bedRooms: 0,
@@ -56,6 +59,16 @@ const Host = () => {
     },
   });
   const [newAmenity, setNewAmenity] = useState("");
+  const [imageFiles, setImageFiles] = useState<ImagePreview[]>([]);
+
+  // Cleanup object URLs when component unmounts to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      imageFiles.forEach((imagePreview) => {
+        URL.revokeObjectURL(imagePreview.previewUrl);
+      });
+    };
+  }, [imageFiles]);
 
   const roomTypes = [
     "House",
@@ -145,18 +158,12 @@ const Host = () => {
   };
 
   const onDrop = (acceptedFiles: File[]) => {
-    // Convert files to data URLs for preview
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl = e.target?.result as string;
-        setFormData((prev) => ({
-          ...prev,
-          images: [...prev.images, dataUrl],
-        }));
-      };
-      reader.readAsDataURL(file);
-    });
+    const newImages: ImagePreview[] = acceptedFiles.map((file) => ({
+      file,
+      previewUrl: URL.createObjectURL(file),
+    }));
+
+    setImageFiles((prev) => [...prev, ...newImages]);
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -168,16 +175,60 @@ const Host = () => {
   });
 
   const removeImage = (indexToRemove: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, index) => index !== indexToRemove),
-    }));
+    setImageFiles((prev) => {
+      const imageToRemove = prev[indexToRemove];
+      if (imageToRemove) {
+        URL.revokeObjectURL(imageToRemove.previewUrl);
+      }
+      return prev.filter((_, index) => index !== indexToRemove);
+    });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Host BnB Form Data:", formData);
-    // TODO: Send to API
+
+    // Create FormData object for sending files to backend
+    // const formDataToSend = new FormData();
+
+    // // Append regular form fields
+    // Object.entries(formData).forEach(([key, value]) => {
+    //   if (key === "available") {
+    //     // Handle nested available object
+    //     formDataToSend.append("availableFrom", formData.available.from);
+    //     formDataToSend.append("availableTo", formData.available.to);
+    //   } else if (key === "amenities") {
+    //     // Handle array of amenities
+    //     formData.amenities.forEach((amenity) => {
+    //       formDataToSend.append("amenities[]", amenity);
+    //     });
+    //   } else {
+    //     formDataToSend.append(key, value.toString());
+    //   }
+    // });
+
+    // // Append image files
+    // imageFiles.forEach((imagePreview) => {
+    //   formDataToSend.append(`images`, imagePreview.file);
+    // });
+
+    // console.log("Host BnB Form Data:", formData);
+    // console.log(
+    //   "Image Files:",
+    //   imageFiles.map((img) => ({ name: img.file.name, size: img.file.size }))
+    // );
+
+    // TODO: Send FormData to API endpoint
+    // Example API call:
+    // try {
+    //   const response = await fetch('/api/properties', {
+    //     method: 'POST',
+    //     body: formDataToSend,
+    //   });
+    //   const result = await response.json();
+    //   console.log('Success:', result);
+    // } catch (error) {
+    //   console.error('Error:', error);
+    // }
   };
 
   return (
@@ -446,16 +497,16 @@ const Host = () => {
               )}
             </div>
 
-            {formData.images.length > 0 && (
+            {imageFiles.length > 0 && (
               <div className="mt-6">
                 <Typography variant="subtitle1" className="mb-3 font-medium">
-                  Uploaded Images ({formData.images.length})
+                  Uploaded Images ({imageFiles.length})
                 </Typography>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {formData.images.map((image, index) => (
+                  {imageFiles.map((imagePreview, index) => (
                     <div key={index} className="relative group">
                       <img
-                        src={image}
+                        src={imagePreview.previewUrl}
                         alt={`Preview ${index + 1}`}
                         className="w-full h-32 object-cover rounded-lg border border-gray-400 shadow-md"
                       />
