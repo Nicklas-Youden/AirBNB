@@ -4,13 +4,11 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// Setup temp directory for multer
 const tempDir = "./uploads/temp";
 if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir, { recursive: true });
 }
 
-// Multer configuration for temporary storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, tempDir),
   filename: (req, file, cb) => {
@@ -39,10 +37,8 @@ export const upload = multer({
   },
 });
 
-// Get all Destinations with pagination
 export const getAllDestinations = async (req: Request, res: Response) => {
   try {
-    // Extract pagination parameters from query
     const pageNumber = parseInt(req.query.pageNumber as string) || 1;
     const pageSize = parseInt(req.query.pageSize as string) || 50;
     const skip = (pageNumber - 1) * pageSize;
@@ -74,7 +70,6 @@ export const getAllDestinations = async (req: Request, res: Response) => {
   }
 };
 
-// Get a single destination by ID
 export const getDestinationById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -88,7 +83,6 @@ export const getDestinationById = async (req: Request, res: Response) => {
   }
 };
 
-// Create a new destination with images
 export const createDestination = async (req: Request, res: Response) => {
   try {
     const newDestination = new AirBnbDestinationsModel(req.body);
