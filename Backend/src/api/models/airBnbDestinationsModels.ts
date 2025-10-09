@@ -57,7 +57,7 @@ const airBnbDestinations: Schema = new Schema({
       to: { type: Date, required: true },
     },
     _id: false,
-    required: false,
+    required: true,
   },
   occupied: { type: Boolean, required: false, default: false },
 });

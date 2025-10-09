@@ -5,6 +5,7 @@ import {
   createDestination,
   updateDestination,
   deleteDestination,
+  upload,
 } from "../controllers/airBnbDestinationsController";
 
 const router = Router();
@@ -15,8 +16,8 @@ router.get("/", getAllDestinations);
 // Get a single destination by ID
 router.get("/:id", getDestinationById);
 
-// Create a new destination
-router.post("/", createDestination);
+// Create a new destination with images
+router.post("/", upload.array("images"), createDestination);
 
 // Update a destination by ID
 router.put("/:id", updateDestination);

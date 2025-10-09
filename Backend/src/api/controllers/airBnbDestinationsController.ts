@@ -1,5 +1,43 @@
 import { Request, Response } from "express";
 import { AirBnbDestinationsModel } from "../models/airBnbDestinationsModels";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+// Setup temp directory for multer
+const tempDir = "./uploads/temp";
+if (!fs.existsSync(tempDir)) {
+  fs.mkdirSync(tempDir, { recursive: true });
+}
+
+// Multer configuration for temporary storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, tempDir),
+  filename: (req, file, cb) => {
+    const uniqueName = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueName + path.extname(file.originalname));
+  },
+});
+
+export const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit per file
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|webp/;
+    const extname = allowedTypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
+    const mimetype = allowedTypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed"));
+    }
+  },
+});
 
 // Get all Destinations with pagination
 export const getAllDestinations = async (req: Request, res: Response) => {
@@ -50,14 +88,44 @@ export const getDestinationById = async (req: Request, res: Response) => {
   }
 };
 
-// Create a new destination
+// Create a new destination with images
 export const createDestination = async (req: Request, res: Response) => {
   try {
     const newDestination = new AirBnbDestinationsModel(req.body);
-    const savedDestination = await newDestination.save();
-    res.status(201).json(savedDestination);
+    await newDestination.save();
+
+    const imagePaths: string[] = [];
+    const files = req.files as Express.Multer.File[];
+
+    if (files && files.length > 0) {
+      // Create folder in public/images/destinations/:id
+      const destinationDir = `./public/images/destinations/${newDestination._id}`;
+      if (!fs.existsSync(destinationDir)) {
+        fs.mkdirSync(destinationDir, { recursive: true });
+      }
+
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      for (const file of files) {
+        const newPath = path.join(destinationDir, file.filename);
+        fs.renameSync(file.path, newPath); // move file
+        imagePaths.push(
+          `${baseUrl}/images/destinations/${newDestination._id}/${file.filename}`
+        );
+      }
+
+      newDestination.images = imagePaths;
+      await newDestination.save();
+    }
+
+    res.status(201).json({
+      message: "Destination created successfully",
+      destination: newDestination,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error creating destination", error });
+    res.status(500).json({
+      message: "Error creating destination",
+      error,
+    });
   }
 };
 
@@ -91,7 +159,16 @@ export const deleteDestination = async (req: Request, res: Response) => {
     if (!deletedDestination) {
       return res.status(404).json({ message: "Destination not found" });
     }
-    res.status(200).json({ message: "Destination deleted successfully" });
+
+    // Clean up destination folder in public/images/destinations
+    const destinationDir = `./public/images/destinations/${id}`;
+    if (fs.existsSync(destinationDir)) {
+      fs.rmSync(destinationDir, { recursive: true, force: true });
+    }
+
+    res.status(200).json({
+      message: "Destination and images deleted successfully",
+    });
   } catch (error) {
     res.status(500).json({ message: "Error deleting destination", error });
   }
