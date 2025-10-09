@@ -85,31 +85,37 @@ export const getDestinationById = async (req: Request, res: Response) => {
 
 export const createDestination = async (req: Request, res: Response) => {
   try {
-    const newDestination = new AirBnbDestinationsModel(req.body);
-    await newDestination.save();
-
     const imagePaths: string[] = [];
     const files = req.files as Express.Multer.File[];
+    let destinationId: string | undefined;
 
+    // If images are provided, process them first
     if (files && files.length > 0) {
-      // Create folder in public/images/destinations/:id
-      const destinationDir = `./public/images/destinations/${newDestination._id}`;
+      // Create a temporary ObjectId for folder naming
+      const tempDestination = new AirBnbDestinationsModel();
+      destinationId = tempDestination._id.toString();
+      const destinationDir = `./public/images/destinations/${destinationId}`;
       if (!fs.existsSync(destinationDir)) {
         fs.mkdirSync(destinationDir, { recursive: true });
       }
-
       const baseUrl = `${req.protocol}://${req.get("host")}`;
       for (const file of files) {
         const newPath = path.join(destinationDir, file.filename);
-        fs.renameSync(file.path, newPath); // move file
+        await fs.promises.rename(file.path, newPath);
         imagePaths.push(
-          `${baseUrl}/images/destinations/${newDestination._id}/${file.filename}`
+          `${baseUrl}/images/destinations/${destinationId}/${file.filename}`
         );
       }
-
-      newDestination.images = imagePaths;
-      await newDestination.save();
     }
+
+    // Now save the destination with image paths and correct _id
+    const destinationData = {
+      ...req.body,
+      images: imagePaths,
+      ...(destinationId ? { _id: destinationId } : {}),
+    };
+    const newDestination = new AirBnbDestinationsModel(destinationData);
+    await newDestination.save();
 
     res.status(201).json({
       message: "Destination created successfully",
