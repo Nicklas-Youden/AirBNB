@@ -78,8 +78,15 @@ class Connection {
 
   post = (endpoint: string, data?: object) => {
     return new Promise((resolve, reject) => {
+      const headers = this.getHeaders();
+
+      // Remove Content-Type for FormData - let browser set it with boundary
+      if (data instanceof FormData) {
+        delete headers["Content-Type"];
+      }
+
       const config = {
-        headers: this.getHeaders(),
+        headers,
       };
 
       axios
