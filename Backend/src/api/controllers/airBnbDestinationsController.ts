@@ -89,9 +89,7 @@ export const createDestination = async (req: Request, res: Response) => {
     const files = req.files as Express.Multer.File[];
     let destinationId: string | undefined;
 
-    // If images are provided, process them first
     if (files && files.length > 0) {
-      // Create a temporary ObjectId for folder naming
       const tempDestination = new AirBnbDestinationsModel();
       destinationId = tempDestination._id.toString();
       const destinationDir = `./public/images/destinations/${destinationId}`;
@@ -108,7 +106,6 @@ export const createDestination = async (req: Request, res: Response) => {
       }
     }
 
-    // Now save the destination with image paths and correct _id
     const destinationData = {
       ...req.body,
       images: imagePaths,
@@ -124,12 +121,11 @@ export const createDestination = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({
       message: "Error creating destination",
-      error,
+      error: "An unexpected error occurred.",
     });
   }
 };
 
-// Update a destination by ID
 export const updateDestination = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -149,7 +145,6 @@ export const updateDestination = async (req: Request, res: Response) => {
   }
 };
 
-// Delete a destination by ID
 export const deleteDestination = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -160,7 +155,6 @@ export const deleteDestination = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Destination not found" });
     }
 
-    // Clean up destination folder in public/images/destinations
     const destinationDir = `./public/images/destinations/${id}`;
     if (fs.existsSync(destinationDir)) {
       fs.rmSync(destinationDir, { recursive: true, force: true });
