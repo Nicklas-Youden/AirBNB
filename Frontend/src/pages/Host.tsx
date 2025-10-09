@@ -14,6 +14,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import Icon from "../../lib/icon/icon";
+import { useApi } from "../../lib";
 
 interface HostFormData {
   title: string;
@@ -60,6 +61,7 @@ const Host = () => {
   });
   const [newAmenity, setNewAmenity] = useState("");
   const [imageFiles, setImageFiles] = useState<ImagePreview[]>([]);
+  const api = useApi();
 
   // Cleanup object URLs when component unmounts to prevent memory leaks
   useEffect(() => {
@@ -203,32 +205,37 @@ const Host = () => {
     formDataToSend.append("beds", formData.beds.toString());
 
     // Add availability dates as separate fields (backend will construct the object)
-    formDataToSend.append("available[from]", new Date(formData.available.from).toISOString());
-    formDataToSend.append("available[to]", new Date(formData.available.to).toISOString());
+    formDataToSend.append(
+      "available[from]",
+      new Date(formData.available.from).toISOString()
+    );
+    formDataToSend.append(
+      "available[to]",
+      new Date(formData.available.to).toISOString()
+    );
 
     // Add amenities (array handling)
     formData.amenities.forEach((amenity) => {
       formDataToSend.append("amenities", amenity);
     });
 
-    // console.log("Host BnB Form Data:", formData);
-    // console.log(
-    //   "Image Files:",
-    //   imageFiles.map((img) => ({ name: img.file.name, size: img.file.size }))
-    // );
+    // Add image files
+    console.log("📎 Adding images to FormData:", imageFiles.length);
+    imageFiles.forEach((imagePreview, index) => {
+      console.log(
+        `Adding image ${index}:`,
+        imagePreview.file.name,
+        imagePreview.file.type
+      );
+      formDataToSend.append("images", imagePreview.file);
+    });
 
-    // TODO: Send FormData to API endpoint
-    // Example API call:
-    // try {
-    //   const response = await fetch('/api/properties', {
-    //     method: 'POST',
-    //     body: formDataToSend,
-    //   });
-    //   const result = await response.json();
-    //   console.log('Success:', result);
-    // } catch (error) {
-    //   console.error('Error:', error);
-    // }
+    try {
+      const result = await api.createCapaBNB(formDataToSend);
+      console.log("✅ Property created successfully:", result);
+    } catch (error) {
+      console.error("Failed to create property:", error);
+    }
   };
 
   return (
@@ -299,7 +306,7 @@ const Host = () => {
                       ),
                     },
                     htmlInput: {
-                      min: 0,
+                      min: 1,
                     },
                   }}
                 />
@@ -371,7 +378,7 @@ const Host = () => {
                 required
                 slotProps={{
                   htmlInput: {
-                    min: 0,
+                    min: 1,
                   },
                 }}
               />
