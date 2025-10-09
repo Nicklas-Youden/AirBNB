@@ -82,17 +82,22 @@ const Header = () => {
         >
           CapaBNB
         </h1>
-
         <div className="flex items-center gap-4">
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigate("/host")}
-            className="bg-gradient-to-r to-purple-800 from-purple-900 rounded-lg text-white hover:opacity-90 normal-case"
-          >
-            Host BNB
-          </Button>
-          {isAuthenticated ? <UserHeaderIcon /> : <UserLoginIcon />}
+          {isAuthenticated ? (
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => navigate("/host")}
+                className="bg-gradient-to-r to-purple-800 from-purple-900 rounded-lg text-white hover:opacity-90 normal-case"
+              >
+                Host BNB
+              </Button>
+              <UserHeaderIcon />
+            </>
+          ) : (
+            <UserLoginIcon />
+          )}
         </div>
       </div>
     </div>

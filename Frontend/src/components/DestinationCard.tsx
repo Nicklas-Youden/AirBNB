@@ -11,7 +11,7 @@ interface Listing {
   price: number;
   roomType: string;
   maxGuests: number;
-  available: {
+  available?: {
     from: string;
     to: string;
   };
@@ -56,7 +56,10 @@ const DestinationCard = ({ listing, onClick }: DestinationCardProps) => {
             ${listing.price} <span className="text-gray-500">·</span>
           </p>
           <p className="text-gray-500 text-sm">
-            {formatPeriod(listing.available.from, listing.available.to, true)}
+            {listing.available ? 
+              formatPeriod(listing.available.from, listing.available.to, true) : 
+              'Available dates not set'
+            }
           </p>
         </div>
         <p className="text-gray-500 text-sm flex items-center">

@@ -187,29 +187,29 @@ const Host = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Create FormData object for sending files to backend
-    // const formDataToSend = new FormData();
+    const formDataToSend = new FormData();
 
-    // // Append regular form fields
-    // Object.entries(formData).forEach(([key, value]) => {
-    //   if (key === "available") {
-    //     // Handle nested available object
-    //     formDataToSend.append("availableFrom", formData.available.from);
-    //     formDataToSend.append("availableTo", formData.available.to);
-    //   } else if (key === "amenities") {
-    //     // Handle array of amenities
-    //     formData.amenities.forEach((amenity) => {
-    //       formDataToSend.append("amenities[]", amenity);
-    //     });
-    //   } else {
-    //     formDataToSend.append(key, value.toString());
-    //   }
-    // });
+    // Add destination data
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("price", formData.price.toString());
+    formDataToSend.append("city", formData.city);
+    formDataToSend.append("country", formData.country);
+    formDataToSend.append("address", formData.address);
+    formDataToSend.append("roomType", formData.roomType);
+    formDataToSend.append("maxGuests", formData.maxGuests.toString());
+    formDataToSend.append("bedRooms", formData.bedRooms.toString());
+    formDataToSend.append("bathRooms", formData.bathRooms.toString());
+    formDataToSend.append("beds", formData.beds.toString());
 
-    // // Append image files
-    // imageFiles.forEach((imagePreview) => {
-    //   formDataToSend.append(`images`, imagePreview.file);
-    // });
+    // Add availability dates as separate fields (backend will construct the object)
+    formDataToSend.append("available[from]", new Date(formData.available.from).toISOString());
+    formDataToSend.append("available[to]", new Date(formData.available.to).toISOString());
+
+    // Add amenities (array handling)
+    formData.amenities.forEach((amenity) => {
+      formDataToSend.append("amenities", amenity);
+    });
 
     // console.log("Host BnB Form Data:", formData);
     // console.log(
