@@ -45,7 +45,7 @@ const Bookings = () => {
   });
   const [currentBookings, setCurrentBookings] = useState<Listing[]>([]);
 
-  const fetchAirBnbs = useCallback(
+  const fetchCapaBnbs = useCallback(
     async (pageNumber: number = currentPage) => {
       try {
         setLoading(true);
@@ -68,12 +68,12 @@ const Bookings = () => {
   );
 
   useEffect(() => {
-    fetchAirBnbs();
-  }, [fetchAirBnbs]);
+    fetchCapaBnbs();
+  }, [fetchCapaBnbs]);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    fetchAirBnbs(pageNumber);
+    fetchCapaBnbs(pageNumber);
   };
 
   const handleCardClick = (id: string | number) => {

@@ -109,7 +109,7 @@ const DestinationDetail = () => {
 
     try {
       setLoading(true);
-      const response = (await api.getSingleAirBNB(
+      const response = (await api.getSingleCapaBNB(
         destinationId
       )) as Destination;
       setDestination(response);

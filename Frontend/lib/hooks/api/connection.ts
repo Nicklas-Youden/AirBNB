@@ -26,11 +26,11 @@ class Connection {
 
     return headers;
   };
-  getAirBNBs = (params?: Record<string, string | number | boolean>) => {
+  getCapaBNBs = (params?: Record<string, string | number | boolean>) => {
     return this.get(`destinations`, params ? { params } : undefined);
   };
 
-  getSingleAirBNB = (id: string) => this.get(`destinations/${id}`);
+  getSingleCapaBNB = (id: string) => this.get(`destinations/${id}`);
 
   getUserProfile = () => this.get(`users/profile`);
 
@@ -54,7 +54,7 @@ class Connection {
     });
   };
 
-  createAirBNB = (data: object) => this.post("destinations", data);
+  createCapaBNB = (data: object | FormData) => this.post("destinations", data);
 
   createBooking = (data: object) => this.post("booking", data);
 

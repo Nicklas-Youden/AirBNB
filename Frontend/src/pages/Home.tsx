@@ -35,7 +35,7 @@ const Home = () => {
   const api = useApi();
   const navigate = useNavigate();
 
-  const [airBnbs, setAirBnbs] = useState<Listing[]>([]);
+  const [capaBnbs, setCapaBnbs] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [paging, setPaging] = useState({
@@ -45,21 +45,21 @@ const Home = () => {
     totalPages: 0,
   });
 
-  const fetchAirBnbs = useCallback(
+  const fetchCapaBnbs = useCallback(
     async (pageNumber: number = currentPage) => {
       try {
         setLoading(true);
 
-        const response = (await api.getAirBNBs({
+        const response = (await api.getCapaBNBs({
           pageNumber,
           pageSize: paging.pageSize,
         })) as PaginatedResponse;
-        setAirBnbs(response.destinations ?? []);
+        setCapaBnbs(response.destinations ?? []);
         if (response.paging) {
           setPaging(response.paging);
         }
       } catch (err) {
-        console.error("Error fetching airBnbs:", err);
+        console.error("Error fetching capaBnbs:", err);
       } finally {
         setLoading(false);
       }
@@ -68,12 +68,12 @@ const Home = () => {
   );
 
   useEffect(() => {
-    fetchAirBnbs();
-  }, [fetchAirBnbs]);
+    fetchCapaBnbs();
+  }, [fetchCapaBnbs]);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    fetchAirBnbs(pageNumber);
+    fetchCapaBnbs(pageNumber);
   };
 
   const handleCardClick = (id: string | number) => {
@@ -91,7 +91,7 @@ const Home = () => {
       {!loading && (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {airBnbs.map((listing) => (
+            {capaBnbs.map((listing) => (
               <DestinationCard
                 key={listing._id}
                 listing={listing}
