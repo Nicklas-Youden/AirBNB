@@ -1,10 +1,44 @@
 import { Request, Response } from "express";
 import { AirBnbDestinationsModel } from "../models/airBnbDestinationsModels";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 
-// Get all Destinations with pagination
+const tempDir = "./uploads/temp";
+if (!fs.existsSync(tempDir)) {
+  fs.mkdirSync(tempDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, tempDir),
+  filename: (req, file, cb) => {
+    const uniqueName = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueName + path.extname(file.originalname));
+  },
+});
+
+export const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit per file
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|webp/;
+    const extname = allowedTypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
+    const mimetype = allowedTypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed"));
+    }
+  },
+});
+
 export const getAllDestinations = async (req: Request, res: Response) => {
   try {
-    // Extract pagination parameters from query
     const pageNumber = parseInt(req.query.pageNumber as string) || 1;
     const pageSize = parseInt(req.query.pageSize as string) || 50;
     const skip = (pageNumber - 1) * pageSize;
@@ -36,7 +70,6 @@ export const getAllDestinations = async (req: Request, res: Response) => {
   }
 };
 
-// Get a single destination by ID
 export const getDestinationById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -50,18 +83,49 @@ export const getDestinationById = async (req: Request, res: Response) => {
   }
 };
 
-// Create a new destination
 export const createDestination = async (req: Request, res: Response) => {
   try {
-    const newDestination = new AirBnbDestinationsModel(req.body);
-    const savedDestination = await newDestination.save();
-    res.status(201).json(savedDestination);
+    const imagePaths: string[] = [];
+    const files = req.files as Express.Multer.File[];
+    let destinationId: string | undefined;
+
+    if (files && files.length > 0) {
+      const tempDestination = new AirBnbDestinationsModel();
+      destinationId = tempDestination._id.toString();
+      const destinationDir = `./public/images/destinations/${destinationId}`;
+      if (!fs.existsSync(destinationDir)) {
+        fs.mkdirSync(destinationDir, { recursive: true });
+      }
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      for (const file of files) {
+        const newPath = path.join(destinationDir, file.filename);
+        await fs.promises.rename(file.path, newPath);
+        imagePaths.push(
+          `${baseUrl}/images/destinations/${destinationId}/${file.filename}`
+        );
+      }
+    }
+
+    const destinationData = {
+      ...req.body,
+      images: imagePaths,
+      ...(destinationId ? { _id: destinationId } : {}),
+    };
+    const newDestination = new AirBnbDestinationsModel(destinationData);
+    await newDestination.save();
+
+    res.status(201).json({
+      message: "Destination created successfully",
+      destination: newDestination,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error creating destination", error });
+    res.status(500).json({
+      message: "Error creating destination",
+      error: "An unexpected error occurred.",
+    });
   }
 };
 
-// Update a destination by ID
 export const updateDestination = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -81,7 +145,6 @@ export const updateDestination = async (req: Request, res: Response) => {
   }
 };
 
-// Delete a destination by ID
 export const deleteDestination = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -91,7 +154,15 @@ export const deleteDestination = async (req: Request, res: Response) => {
     if (!deletedDestination) {
       return res.status(404).json({ message: "Destination not found" });
     }
-    res.status(200).json({ message: "Destination deleted successfully" });
+
+    const destinationDir = `./public/images/destinations/${id}`;
+    if (fs.existsSync(destinationDir)) {
+      fs.rmSync(destinationDir, { recursive: true, force: true });
+    }
+
+    res.status(200).json({
+      message: "Destination and images deleted successfully",
+    });
   } catch (error) {
     res.status(500).json({ message: "Error deleting destination", error });
   }

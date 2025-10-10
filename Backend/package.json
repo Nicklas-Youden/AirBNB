@@ -10,11 +10,15 @@
     "watch": "ts-node-dev src/server.ts"
   },
   "dependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/multer": "^2.0.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^10.0.0",
     "express": "^5.0.0",
+    "fs-extra": "^11.3.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^6.0.0"
+    "mongoose": "^6.0.0",
+    "multer": "^2.0.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
