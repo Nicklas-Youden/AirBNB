@@ -11,6 +11,35 @@ export const getUserBookings = async (req: Request, res: Response) => {
     const pageSize = parseInt(req.query.pageSize as string) || 50;
     const skip = (pageNumber - 1) * pageSize;
 
+    const now = new Date();
+    await BookingModel.updateMany({ userId, stayEnded: false }, [
+      {
+        $lookup: {
+          from: "airbnbdestinations",
+          localField: "destinationId",
+          foreignField: "_id",
+          as: "destination",
+          pipeline: [{ $project: { _id: 0, availableTo: "$available.to" } }],
+        },
+      },
+      {
+        $set: {
+          stayEnded: {
+            $cond: {
+              if: {
+                $lt: [{ $arrayElemAt: ["$destination.availableTo", 0] }, now],
+              },
+              then: true,
+              else: "$stayEnded",
+            },
+          },
+        },
+      },
+      {
+        $unset: "destination",
+      },
+    ]);
+
     // Get total count of user's bookings
     const totalBookings = await BookingModel.countDocuments({ userId });
 
@@ -33,6 +62,11 @@ export const getUserBookings = async (req: Request, res: Response) => {
       },
       {
         $unwind: "$destinationDetails",
+      },
+      {
+        $addFields: {
+          "destinationDetails.stayEnded": "$stayEnded",
+        },
       },
       {
         $replaceRoot: {

@@ -5,6 +5,7 @@ interface Booking extends Document {
   userId: string;
   email: string;
   guests: number;
+  stayEnded: Boolean;
 }
 
 const bookingSchema: Schema = new Schema(
@@ -13,6 +14,7 @@ const bookingSchema: Schema = new Schema(
     userId: { type: String, required: true },
     email: { type: String, required: true },
     guests: { type: Number, required: true },
+    stayEnded: { type: Boolean, required: false, default: false },
   },
   {
     timestamps: true,

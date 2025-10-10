@@ -19,7 +19,7 @@ interface AirBnbDestination {
   bathRooms: number;
   beds: number;
   //   reviews: { user: string; comment: string; rating: number }[];
-  availability: { from: Date; to: Date }[];
+  available: { from: Date; to: Date }[];
   occupied?: boolean;
 }
 
