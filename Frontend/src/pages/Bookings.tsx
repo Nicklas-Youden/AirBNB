@@ -131,8 +131,8 @@ const Bookings = () => {
     <div className="pb-8">
       <Box className="mb-4">
         <Tabs value={activeTab} onChange={handleTabChange}>
-          <Tab label={"Current Bookings "} />
-          <Tab label={"Previous Bookings"} />
+          <Tab className="normal-case text-lg" label={"Current Bookings "} />
+          <Tab className="normal-case text-lg" label={"Previous Bookings"} />
         </Tabs>
       </Box>
       {loading && (
@@ -151,6 +151,7 @@ const Bookings = () => {
                     key={listing._id}
                     listing={listing}
                     onClick={handleCardClick}
+                    Options={{ cancelButton: true }}
                   />
                 ))}
               </div>
