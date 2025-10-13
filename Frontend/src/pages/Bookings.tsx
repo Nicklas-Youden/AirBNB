@@ -78,7 +78,6 @@ const Bookings = () => {
           // Future: Handle hosted bookings
           // setHostedBookings(allBookings);
         } else {
-          // If no filter, split the results (for initial load)
           setCurrentBookings(
             allBookings.filter((booking) => !booking.stayEnded)
           );
@@ -119,17 +118,13 @@ const Bookings = () => {
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
-    setCurrentPage(1); // Reset to first page when switching tabs
+    setCurrentPage(1);
 
-    // Fetch bookings based on the selected tab
     if (newValue === 0) {
-      // Current bookings
       fetchCapaBnbs(1, "current");
     } else if (newValue === 1) {
-      // Previous bookings
       fetchCapaBnbs(1, "past");
     }
-    // Future: else if (newValue === 2) { fetchCapaBnbs(1, "hosted"); }
   };
 
   return (
