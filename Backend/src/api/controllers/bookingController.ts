@@ -6,64 +6,27 @@ export const getUserBookings = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
 
-    // Extract pagination parameters from query
     const pageNumber = parseInt(req.query.pageNumber as string) || 1;
     const pageSize = parseInt(req.query.pageSize as string) || 50;
     const skip = (pageNumber - 1) * pageSize;
 
-    const now = new Date();
-    await BookingModel.aggregate([
-      {
-        $match: { userId, stayEnded: false },
-      },
-      {
-        $addFields: {
-          destinationObjectId: { $toObjectId: "$destinationId" },
-        },
-      },
-      {
-        $lookup: {
-          from: "airbnbdestinations",
-          localField: "destinationObjectId",
-          foreignField: "_id",
-          as: "destination",
-        },
-      },
-      {
-        $unwind: "$destination",
-      },
-      {
-        $match: {
-          "destination.available.to": {
-            $lt: now,
-          },
-        },
-      },
-      {
-        $set: {
-          stayEnded: true,
-        },
-      },
-      {
-        $unset: "destinationObjectId"
-      },
-      {
-        $unset: "destination"
-      },
-      {
-        $merge: {
-          into: "bookings",
-          whenMatched: "replace"
-        }
-      }
-    ]);
+    const bookingType = req.query.bookingType as string;
+    let matchFilter: any = { userId };
 
-    // Get total count of user's bookings
-    const totalBookings = await BookingModel.countDocuments({ userId });
+    if (bookingType === "current") {
+      matchFilter.$or = [
+        { stayEnded: false },
+        { stayEnded: { $exists: false } },
+      ];
+    } else if (bookingType === "past") {
+      matchFilter.stayEnded = true;
+    }
+
+    const totalBookings = await BookingModel.countDocuments(matchFilter);
 
     const bookings = await BookingModel.aggregate([
       {
-        $match: { userId },
+        $match: matchFilter,
       },
       {
         $addFields: {
@@ -148,7 +111,9 @@ export const postUserBooking = async (req: Request, res: Response) => {
       booking: newBooking,
     });
   } catch (error) {
-    res.status(500).json({ message: "Failed to create booking" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to create booking", error });
   }
 };
 
@@ -165,7 +130,7 @@ export const deleteUserBooking = async (req: Request, res: Response) => {
     if (!booking) {
       return res
         .status(404)
-        .json({ message: "Booking not found or unauthorized" });
+        .json({ success: false, message: "Booking not found or unauthorized" });
     }
 
     await AirBnbDestinationsModel.findByIdAndUpdate(booking.destinationId, {
@@ -176,6 +141,8 @@ export const deleteUserBooking = async (req: Request, res: Response) => {
       .status(200)
       .json({ success: true, message: "Booking deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Failed to delete booking" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to delete booking", error });
   }
 };

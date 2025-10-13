@@ -39,32 +39,62 @@ const Bookings = () => {
 
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentPaging, setCurrentPaging] = useState({
+  const [paging, setPaging] = useState({
     pageNumber: 1,
     pageSize: 10,
     totalCount: 0,
     totalPages: 0,
+    stayEnded: false,
   });
   const [currentBookings, setCurrentBookings] = useState<Listing[]>([]);
   const [previousBookings, setPreviousBookings] = useState<Listing[]>([]);
   const [activeTab, setActiveTab] = useState(0);
 
   const fetchCapaBnbs = useCallback(
-    async (pageNumber: number = currentPage) => {
+    async (
+      pageNumber: number = currentPage,
+      bookingType?: "current" | "past"
+    ) => {
       try {
         setLoading(true);
 
-        const response = (await api.getBookings({
+        const params: Record<string, string | number | boolean> = {
           pageNumber,
-          pageSize: currentPaging.pageSize,
-        })) as PaginatedResponse;
+          pageSize: paging.pageSize,
+        };
+
+        if (bookingType) {
+          params.bookingType = bookingType;
+        }
+
+        const response = (await api.getBookings(params)) as PaginatedResponse;
 
         const allBookings = response.bookings ?? [];
-        setCurrentBookings(allBookings.filter((booking) => !booking.stayEnded));
-        setPreviousBookings(allBookings.filter((booking) => booking.stayEnded));
+
+        if (bookingType === "current") {
+          setCurrentBookings(allBookings);
+          setPreviousBookings([]);
+        } else if (bookingType === "past") {
+          setPreviousBookings(allBookings);
+          setCurrentBookings([]);
+        } else if (bookingType === "hosted") {
+          // Future: Handle hosted bookings
+          // setHostedBookings(allBookings);
+        } else {
+          // If no filter, split the results (for initial load)
+          setCurrentBookings(
+            allBookings.filter((booking) => !booking.stayEnded)
+          );
+          setPreviousBookings(
+            allBookings.filter((booking) => booking.stayEnded)
+          );
+        }
 
         if (response.paging) {
-          setCurrentPaging(response.paging);
+          setPaging({
+            ...response.paging,
+            stayEnded: bookingType === "past",
+          });
         }
       } catch (err) {
         console.error("Error fetching bookings:", err);
@@ -72,7 +102,7 @@ const Bookings = () => {
         setLoading(false);
       }
     },
-    [api, currentPage, currentPaging.pageSize]
+    [api, currentPage, paging.pageSize]
   );
 
   useEffect(() => {
@@ -81,7 +111,9 @@ const Bookings = () => {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    fetchCapaBnbs(pageNumber);
+    // Maintain the current tab's filter when changing pages
+    const bookingType = activeTab === 0 ? "current" : "past";
+    fetchCapaBnbs(pageNumber, bookingType);
   };
 
   const handleCardClick = (id: string | number) => {
@@ -90,6 +122,17 @@ const Bookings = () => {
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
+    setCurrentPage(1); // Reset to first page when switching tabs
+
+    // Fetch bookings based on the selected tab
+    if (newValue === 0) {
+      // Current bookings
+      fetchCapaBnbs(1, "current");
+    } else if (newValue === 1) {
+      // Previous bookings
+      fetchCapaBnbs(1, "past");
+    }
+    // Future: else if (newValue === 2) { fetchCapaBnbs(1, "hosted"); }
   };
 
   return (
@@ -104,8 +147,8 @@ const Bookings = () => {
         <>
           <Box className="mb-4">
             <Tabs value={activeTab} onChange={handleTabChange}>
-              <Tab label={`Current Bookings (${currentBookings.length})`} />
-              <Tab label={`Previous Bookings (${previousBookings.length})`} />
+              <Tab label={"Current Bookings "} />
+              <Tab label={"Previous Bookings"} />
             </Tabs>
           </Box>
           {activeTab === 0 && (
@@ -148,7 +191,7 @@ const Bookings = () => {
 
           <Paging
             currentPage={currentPage}
-            totalPages={currentPaging.totalPages}
+            totalPages={paging.totalPages}
             onPageChange={handlePageChange}
           />
         </>
