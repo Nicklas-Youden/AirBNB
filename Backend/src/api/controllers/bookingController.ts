@@ -22,7 +22,6 @@ export const getUserBookings = async (req: Request, res: Response) => {
       matchFilter.stayEnded = true;
     }
 
-    // Update expired bookings based on destination availability
     const now = new Date();
     await BookingModel.aggregate([
       {
