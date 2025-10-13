@@ -51,10 +51,7 @@ const Bookings = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   const fetchCapaBnbs = useCallback(
-    async (
-      pageNumber: number = currentPage,
-      bookingType?: "current" | "past"
-    ) => {
+    async (pageNumber: number = 1, bookingType?: "current" | "past") => {
       try {
         setLoading(true);
 
@@ -102,11 +99,11 @@ const Bookings = () => {
         setLoading(false);
       }
     },
-    [api, currentPage, paging.pageSize]
+    [api, paging.pageSize]
   );
 
   useEffect(() => {
-    fetchCapaBnbs();
+    fetchCapaBnbs(1);
   }, [fetchCapaBnbs]);
 
   const handlePageChange = (pageNumber: number) => {
@@ -137,6 +134,12 @@ const Bookings = () => {
 
   return (
     <div className="pb-8">
+      <Box className="mb-4">
+        <Tabs value={activeTab} onChange={handleTabChange}>
+          <Tab label={"Current Bookings "} />
+          <Tab label={"Previous Bookings"} />
+        </Tabs>
+      </Box>
       {loading && (
         <div className="text-center py-8">
           <p className="text-gray-600">Loading bookings...</p>
@@ -145,12 +148,6 @@ const Bookings = () => {
 
       {!loading && (
         <>
-          <Box className="mb-4">
-            <Tabs value={activeTab} onChange={handleTabChange}>
-              <Tab label={"Current Bookings "} />
-              <Tab label={"Previous Bookings"} />
-            </Tabs>
-          </Box>
           {activeTab === 0 && (
             <div>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-8">
