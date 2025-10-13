@@ -3,6 +3,7 @@ import Paging from "../components/paging";
 import { useApi } from "../../lib";
 import { useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Tabs, Tab, Box } from "@mui/material";
 
 interface Listing {
   _id: string;
@@ -14,6 +15,7 @@ interface Listing {
   price: number;
   roomType: string;
   maxGuests: number;
+  stayEnded: boolean;
   available: {
     from: string;
     to: string;
@@ -37,13 +39,15 @@ const Bookings = () => {
 
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [paging, setPaging] = useState({
+  const [currentPaging, setCurrentPaging] = useState({
     pageNumber: 1,
     pageSize: 10,
     totalCount: 0,
     totalPages: 0,
   });
   const [currentBookings, setCurrentBookings] = useState<Listing[]>([]);
+  const [previousBookings, setPreviousBookings] = useState<Listing[]>([]);
+  const [activeTab, setActiveTab] = useState(0);
 
   const fetchCapaBnbs = useCallback(
     async (pageNumber: number = currentPage) => {
@@ -52,11 +56,15 @@ const Bookings = () => {
 
         const response = (await api.getBookings({
           pageNumber,
-          pageSize: paging.pageSize,
+          pageSize: currentPaging.pageSize,
         })) as PaginatedResponse;
-        setCurrentBookings(response.bookings ?? []);
+
+        const allBookings = response.bookings ?? [];
+        setCurrentBookings(allBookings.filter((booking) => !booking.stayEnded));
+        setPreviousBookings(allBookings.filter((booking) => booking.stayEnded));
+
         if (response.paging) {
-          setPaging(response.paging);
+          setCurrentPaging(response.paging);
         }
       } catch (err) {
         console.error("Error fetching bookings:", err);
@@ -64,7 +72,7 @@ const Bookings = () => {
         setLoading(false);
       }
     },
-    [api, currentPage, paging.pageSize]
+    [api, currentPage, currentPaging.pageSize]
   );
 
   useEffect(() => {
@@ -80,10 +88,12 @@ const Bookings = () => {
     navigate(`/destinations/${id}`);
   };
 
-  return (
-    <div className="">
-      <h2 className="text-2xl font-bold">Current Bookings</h2>
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
+  };
 
+  return (
+    <div className="pb-8">
       {loading && (
         <div className="text-center py-8">
           <p className="text-gray-600">Loading bookings...</p>
@@ -92,25 +102,57 @@ const Bookings = () => {
 
       {!loading && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-8 mt-4">
-            {currentBookings.map((listing) => (
-              <DestinationCard
-                key={listing._id}
-                listing={listing}
-                onClick={handleCardClick}
-              />
-            ))}
-          </div>
+          <Box className="mb-4">
+            <Tabs value={activeTab} onChange={handleTabChange}>
+              <Tab label={`Current Bookings (${currentBookings.length})`} />
+              <Tab label={`Previous Bookings (${previousBookings.length})`} />
+            </Tabs>
+          </Box>
+          {activeTab === 0 && (
+            <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-8">
+                {currentBookings.map((listing) => (
+                  <DestinationCard
+                    key={listing._id}
+                    listing={listing}
+                    onClick={handleCardClick}
+                  />
+                ))}
+              </div>
+              {currentBookings.length === 0 && (
+                <div className="text-center py-8">
+                  <p className="text-gray-600">No current bookings found.</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 1 && (
+            <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-8">
+                {previousBookings.map((listing) => (
+                  <DestinationCard
+                    key={listing._id}
+                    listing={listing}
+                    onClick={handleCardClick}
+                  />
+                ))}
+              </div>
+              {previousBookings.length === 0 && (
+                <div className="text-center py-8">
+                  <p className="text-gray-600">No previous bookings found.</p>
+                </div>
+              )}
+            </div>
+          )}
 
           <Paging
             currentPage={currentPage}
-            totalPages={paging.totalPages}
+            totalPages={currentPaging.totalPages}
             onPageChange={handlePageChange}
           />
         </>
       )}
-
-      {/* <h2 className="text-2xl font-bold mt-8">Previous Bookings</h2> */}
     </div>
   );
 };
