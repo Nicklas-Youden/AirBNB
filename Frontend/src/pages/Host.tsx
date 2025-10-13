@@ -14,6 +14,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import Icon from "../../lib/icon/icon";
+import { useNavigate } from "react-router-dom";
 import { useApi } from "../../lib";
 
 interface HostFormData {
@@ -41,6 +42,7 @@ interface ImagePreview {
 }
 
 const Host = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<HostFormData>({
     title: "",
     roomType: "",
@@ -191,7 +193,6 @@ const Host = () => {
 
     const formDataToSend = new FormData();
 
-    // Add destination data
     formDataToSend.append("title", formData.title);
     formDataToSend.append("description", formData.description);
     formDataToSend.append("price", formData.price.toString());
@@ -204,7 +205,6 @@ const Host = () => {
     formDataToSend.append("bathRooms", formData.bathRooms.toString());
     formDataToSend.append("beds", formData.beds.toString());
 
-    // Add availability dates as separate fields (backend will construct the object)
     formDataToSend.append(
       "available[from]",
       new Date(formData.available.from).toISOString()
@@ -214,25 +214,18 @@ const Host = () => {
       new Date(formData.available.to).toISOString()
     );
 
-    // Add amenities (array handling)
     formData.amenities.forEach((amenity) => {
       formDataToSend.append("amenities", amenity);
     });
 
-    // Add image files
-    console.log("📎 Adding images to FormData:", imageFiles.length);
-    imageFiles.forEach((imagePreview, index) => {
-      console.log(
-        `Adding image ${index}:`,
-        imagePreview.file.name,
-        imagePreview.file.type
-      );
+    imageFiles.forEach((imagePreview) => {
       formDataToSend.append("images", imagePreview.file);
     });
 
     try {
       const result = await api.createCapaBNB(formDataToSend);
       console.log("✅ Property created successfully:", result);
+      navigate("/");
     } catch (error) {
       console.error("Failed to create property:", error);
     }
