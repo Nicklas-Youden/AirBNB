@@ -22,6 +22,54 @@ export const getUserBookings = async (req: Request, res: Response) => {
       matchFilter.stayEnded = true;
     }
 
+    // Update expired bookings based on destination availability
+    const now = new Date();
+    await BookingModel.aggregate([
+      {
+        $match: { userId, stayEnded: false },
+      },
+      {
+        $addFields: {
+          destinationObjectId: { $toObjectId: "$destinationId" },
+        },
+      },
+      {
+        $lookup: {
+          from: "airbnbdestinations",
+          localField: "destinationObjectId",
+          foreignField: "_id",
+          as: "destination",
+        },
+      },
+      {
+        $unwind: "$destination",
+      },
+      {
+        $match: {
+          "destination.available.to": {
+            $lt: now,
+          },
+        },
+      },
+      {
+        $set: {
+          stayEnded: true,
+        },
+      },
+      {
+        $unset: "destinationObjectId",
+      },
+      {
+        $unset: "destination",
+      },
+      {
+        $merge: {
+          into: "bookings",
+          whenMatched: "replace",
+        },
+      },
+    ]);
+
     const totalBookings = await BookingModel.countDocuments(matchFilter);
 
     const bookings = await BookingModel.aggregate([
