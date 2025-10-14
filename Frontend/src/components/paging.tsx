@@ -24,7 +24,7 @@ const Paging = ({ currentPage, totalPages, onPageChange }: PagingProps) => {
   };
 
   if (totalPages <= 1) {
-    return null; // Don't show pagination if there's only 1 page or no pages
+    return null;
   }
 
   return (
