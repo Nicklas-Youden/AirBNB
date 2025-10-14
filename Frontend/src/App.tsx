@@ -78,7 +78,7 @@ const Header = () => {
       <div className=" flex justify-between items-center max-w-[1500px] mx-auto">
         <h1
           onClick={() => navigate("/")}
-          className="text-3xl font-bold bg-gradient-to-r from-purple-800 to-purple-900 bg-clip-text text-transparent cursor-pointer w-fit transition-all duration-300"
+          className="text-3xl font-bold bg-gradient-to-l from-purple-600 to-purple-800 bg-clip-text text-transparent cursor-pointer w-fit transition-all duration-300"
         >
           CapaBNB
         </h1>
@@ -89,7 +89,7 @@ const Header = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => navigate("/host")}
-                className="bg-gradient-to-r to-purple-800 from-purple-900 rounded-lg text-white hover:opacity-90 normal-case"
+                className="bg-gradient-to-l to-purple-600 from-purple-800 rounded-lg text-white hover:opacity-90 normal-case"
               >
                 Host BNB
               </Button>

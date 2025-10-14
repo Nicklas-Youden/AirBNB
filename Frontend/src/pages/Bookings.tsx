@@ -51,6 +51,13 @@ const Bookings = () => {
   const [previousBookings, setPreviousBookings] = useState<Listing[]>([]);
   const [activeTab, setActiveTab] = useState(0);
 
+  const removeDuplicateDestinations = (bookings: Listing[]): Listing[] => {
+    const seen = new Set<string>();
+    return bookings.filter(
+      (booking) => !seen.has(booking._id) && seen.add(booking._id)
+    );
+  };
+
   const fetchCapaBnbs = useCallback(
     async (pageNumber: number = 1, bookingType?: "current" | "past") => {
       try {
@@ -69,29 +76,40 @@ const Bookings = () => {
 
         const allBookings = response.bookings ?? [];
 
+        const processBookings = (bookings: Listing[], type?: string) => {
+          const filtered = removeDuplicateDestinations(bookings);
+          if (response.paging) {
+            const totalPages = Math.max(
+              1,
+              Math.ceil(filtered.length / response.paging.pageSize)
+            );
+            setPaging({
+              ...response.paging,
+              totalCount: filtered.length,
+              totalPages,
+              stayEnded: type === "past",
+            });
+          }
+          return filtered;
+        };
+
         if (bookingType === "current") {
-          setCurrentBookings(allBookings);
+          setCurrentBookings(processBookings(allBookings, "current"));
           setPreviousBookings([]);
         } else if (bookingType === "past") {
-          setPreviousBookings(allBookings);
+          setPreviousBookings(processBookings(allBookings, "past"));
           setCurrentBookings([]);
-        } else if (bookingType === "hosted") {
-          // Future: Handle hosted bookings
-          // setHostedBookings(allBookings);
         } else {
-          setCurrentBookings(
-            allBookings.filter((booking) => !booking.stayEnded)
+          const current = processBookings(
+            allBookings.filter((b) => !b.stayEnded),
+            "current"
           );
-          setPreviousBookings(
-            allBookings.filter((booking) => booking.stayEnded)
+          const previous = processBookings(
+            allBookings.filter((b) => b.stayEnded),
+            "past"
           );
-        }
-
-        if (response.paging) {
-          setPaging({
-            ...response.paging,
-            stayEnded: bookingType === "past",
-          });
+          setCurrentBookings(current);
+          setPreviousBookings(previous);
         }
       } catch (err) {
         console.error("Error fetching bookings:", err);
@@ -108,9 +126,7 @@ const Bookings = () => {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    // Maintain the current tab's filter when changing pages
-    const bookingType = activeTab === 0 ? "current" : "past";
-    fetchCapaBnbs(pageNumber, bookingType);
+    fetchCapaBnbs(pageNumber, activeTab === 0 ? "current" : "past");
   };
 
   const handleCardClick = (id: string | number) => {
@@ -120,8 +136,7 @@ const Bookings = () => {
   const handleCancel = async (bookingId: string | number) => {
     try {
       await api.cancelBooking(bookingId.toString());
-      const bookingType = activeTab === 0 ? "current" : "past";
-      fetchCapaBnbs(currentPage, bookingType);
+      fetchCapaBnbs(currentPage, activeTab === 0 ? "current" : "past");
     } catch (error) {
       console.error("Error cancelling booking:", error);
     }
@@ -130,12 +145,7 @@ const Bookings = () => {
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
     setCurrentPage(1);
-
-    if (newValue === 0) {
-      fetchCapaBnbs(1, "current");
-    } else if (newValue === 1) {
-      fetchCapaBnbs(1, "past");
-    }
+    fetchCapaBnbs(1, newValue === 0 ? "current" : "past");
   };
 
   return (

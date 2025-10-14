@@ -74,80 +74,82 @@ export const getAllDestinations = async (req: Request, res: Response) => {
 export const getDestinationById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const currentUserId = req.user?.userId; // May be undefined if not authenticated
+    const currentUserId = req.user?.userId;
 
-    const result = await AirBnbDestinationsModel.aggregate([
+    const pipeline: any[] = [
       {
         $match: { _id: new Types.ObjectId(id) },
       },
-      {
-        $lookup: {
-          from: "bookings",
-          let: { destinationId: { $toString: "$_id" } },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$destinationId", "$$destinationId"] },
-                    { $ne: ["$stayEnded", true] },
-                  ],
+    ];
+
+    if (currentUserId) {
+      pipeline.push(
+        {
+          $lookup: {
+            from: "bookings",
+            let: { destinationId: { $toString: "$_id" } },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$destinationId", "$$destinationId"] },
+                      { $ne: ["$stayEnded", true] },
+                    ],
+                  },
                 },
               },
-            },
-            { $limit: 1 },
-            { $project: { userId: 1, _id: 1 } },
-          ],
-          as: "activeBooking",
-        },
-      },
-      {
-        $addFields: {
-          // Only add userId and bookingId if current user is the one who booked it
-          userId: {
-            $cond: {
-              if: {
-                $and: [
-                  { $gt: [{ $size: "$activeBooking" }, 0] },
-                  currentUserId
-                    ? {
-                        $eq: [
-                          { $arrayElemAt: ["$activeBooking.userId", 0] },
-                          currentUserId,
-                        ],
-                      }
-                    : false,
-                ],
-              },
-              then: { $arrayElemAt: ["$activeBooking.userId", 0] },
-              else: "$$REMOVE",
-            },
+              { $limit: 1 },
+              { $project: { userId: 1, _id: 1 } },
+            ],
+            as: "activeBooking",
           },
-          bookingId: {
-            $cond: {
-              if: {
-                $and: [
-                  { $gt: [{ $size: "$activeBooking" }, 0] },
-                  currentUserId
-                    ? {
-                        $eq: [
-                          { $arrayElemAt: ["$activeBooking.userId", 0] },
-                          currentUserId,
-                        ],
-                      }
-                    : false,
-                ],
+        },
+        {
+          $addFields: {
+            userId: {
+              $cond: {
+                if: {
+                  $and: [
+                    { $gt: [{ $size: "$activeBooking" }, 0] },
+                    {
+                      $eq: [
+                        { $arrayElemAt: ["$activeBooking.userId", 0] },
+                        currentUserId,
+                      ],
+                    },
+                  ],
+                },
+                then: { $arrayElemAt: ["$activeBooking.userId", 0] },
+                else: "$$REMOVE",
               },
-              then: { $arrayElemAt: ["$activeBooking._id", 0] },
-              else: "$$REMOVE",
+            },
+            bookingId: {
+              $cond: {
+                if: {
+                  $and: [
+                    { $gt: [{ $size: "$activeBooking" }, 0] },
+                    {
+                      $eq: [
+                        { $arrayElemAt: ["$activeBooking.userId", 0] },
+                        currentUserId,
+                      ],
+                    },
+                  ],
+                },
+                then: { $arrayElemAt: ["$activeBooking._id", 0] },
+                else: "$$REMOVE",
+              },
             },
           },
         },
-      },
-      {
-        $unset: "activeBooking",
-      },
-    ]);
+        {
+          $unset: "activeBooking",
+        }
+      );
+    }
+
+    const result = await AirBnbDestinationsModel.aggregate(pipeline);
 
     if (!result || result.length === 0) {
       return res.status(404).json({ message: "Destination not found" });
