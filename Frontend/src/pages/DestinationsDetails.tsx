@@ -350,7 +350,7 @@ const DestinationDetail = () => {
             </div>
 
             {destination.occupied ? (
-              destination?.userId === user?.id ? (
+              isAuthenticated && destination?.userId === user?.id ? (
                 <Button
                   size="large"
                   color="error"
@@ -374,7 +374,7 @@ const DestinationDetail = () => {
               <Button
                 size="large"
                 variant="contained"
-                className="w-full max-w-56 normal-case"
+                className="w-full max-w-56 bg-gradient-to-t to-purple-600 from-purple-800 rounded-lg text-white hover:opacity-90 normal-case"
                 onClick={() => setOpenBookingDialog(true)}
               >
                 Reserve
@@ -383,7 +383,7 @@ const DestinationDetail = () => {
               <Button
                 size="large"
                 variant="contained"
-                className="w-full max-w-56 bg-gradient-to-r to-purple-800 from-purple-900 rounded-lg text-white hover:opacity-90 normal-case"
+                className="w-full max-w-56 bg-gradient-to-r to-purple-600 from-purple-800 rounded-lg text-white hover:opacity-90 normal-case"
                 onClick={() => setOpenLoginDialog(true)}
               >
                 Login to Reserve
@@ -477,6 +477,7 @@ const DestinationDetail = () => {
                 label="Email"
                 variant="outlined"
                 defaultValue={user?.email}
+                className="purple-field"
                 fullWidth
                 required
               />
@@ -486,6 +487,7 @@ const DestinationDetail = () => {
                 id="guests"
                 label="Number of Guests"
                 variant="outlined"
+                className="purple-field"
                 defaultValue={1}
                 fullWidth
                 required
@@ -503,10 +505,17 @@ const DestinationDetail = () => {
             variant="contained"
             color="primary"
             form="booking-form"
+            className="bg-gradient-to-b to-purple-600 from-purple-800 rounded-lg text-white hover:opacity-90 normal-case"
           >
             Book
           </Button>
-          <Button onClick={() => setOpenBookingDialog(false)}>Close</Button>
+          <Button
+            onClick={() => setOpenBookingDialog(false)}
+            variant="text"
+            className="normal-case  text-purple-600 "
+          >
+            Close
+          </Button>
         </DialogActions>
       </Dialog>
 
@@ -580,7 +589,7 @@ const DestinationDetail = () => {
             <Button
               variant="outlined"
               onClick={() => navigate("/bookings")}
-              className="flex-1 max-w-48"
+              className="flex-1 max-w-48 border-purple-600 text-purple-600 hover:bg-purple-50 normal-case"
             >
               Your Bookings
             </Button>
@@ -589,7 +598,7 @@ const DestinationDetail = () => {
               onClick={() =>
                 setOpenConfirmationDialog({ open: false, error: false })
               }
-              className="flex-1 max-w-48"
+              className="flex-1 max-w-48 border-purple-600 text-purple-600 hover:bg-purple-50 normal-case"
             >
               Close
             </Button>
