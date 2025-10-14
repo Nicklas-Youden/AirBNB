@@ -79,8 +79,6 @@ class Connection {
   post = (endpoint: string, data?: object) => {
     return new Promise((resolve, reject) => {
       const headers = this.getHeaders();
-
-      // Remove Content-Type for FormData - let browser set it with boundary
       if (data instanceof FormData) {
         delete headers["Content-Type"];
       }
@@ -94,6 +92,26 @@ class Connection {
         .then((response) => resolve(response.data))
         .catch((error) => {
           console.error("API POST Error:", error.response.data);
+          reject(error);
+        });
+    });
+  };
+
+  cancelBooking = (id: string) => this.put(`booking/cancel/${id}`);
+
+  put = (endpoint: string, data?: object) => {
+    return new Promise((resolve, reject) => {
+      const headers = this.getHeaders();
+
+      const config = {
+        headers,
+      };
+
+      axios
+        .put(`/api/${endpoint}`, data, config)
+        .then((response) => resolve(response.data))
+        .catch((error) => {
+          console.error("API PUT Error:", error.response.data);
           reject(error);
         });
     });

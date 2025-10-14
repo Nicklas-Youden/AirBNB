@@ -3,6 +3,7 @@ import { AirBnbDestinationsModel } from "../models/airBnbDestinationsModels";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import { Types } from "mongoose";
 
 const tempDir = "./uploads/temp";
 if (!fs.existsSync(tempDir)) {
@@ -73,11 +74,52 @@ export const getAllDestinations = async (req: Request, res: Response) => {
 export const getDestinationById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const destination = await AirBnbDestinationsModel.findById(id);
-    if (!destination) {
+    const result = await AirBnbDestinationsModel.aggregate([
+      {
+        $match: { _id: new Types.ObjectId(id) },
+      },
+      {
+        $lookup: {
+          from: "bookings",
+          let: { destinationId: { $toString: "$_id" } },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$destinationId", "$$destinationId"] },
+                    { $ne: ["$stayEnded", true] },
+                  ],
+                },
+              },
+            },
+            { $limit: 1 },
+            { $project: { userId: 1 } },
+          ],
+          as: "activeBooking",
+        },
+      },
+      {
+        $addFields: {
+          userId: {
+            $cond: {
+              if: { $gt: [{ $size: "$activeBooking" }, 0] },
+              then: { $arrayElemAt: ["$activeBooking.userId", 0] },
+              else: null,
+            },
+          },
+        },
+      },
+      {
+        $unset: "activeBooking",
+      },
+    ]);
+
+    if (!result || result.length === 0) {
       return res.status(404).json({ message: "Destination not found" });
     }
-    res.status(200).json(destination);
+
+    res.status(200).json(result[0]);
   } catch (error) {
     res.status(500).json({ message: "Error fetching destination", error });
   }

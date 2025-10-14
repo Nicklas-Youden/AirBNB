@@ -22,7 +22,7 @@ const App = () => {
   return (
     <AuthContextProvider>
       <BrowserRouter>
-        <div className=" mx-auto w-full">
+        <div className=" mx-auto w-full pb-8">
           <Header />
           <Content />
         </div>

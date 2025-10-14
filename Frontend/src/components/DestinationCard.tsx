@@ -1,8 +1,10 @@
 import Icon from "../../lib/icon/icon";
 import { formatPeriod } from "../../lib";
+import { Button } from "@mui/material";
 
 interface Listing {
   _id: string;
+  bookingId?: string;
   images: string[];
   title: string;
   rating: number;
@@ -20,9 +22,19 @@ interface Listing {
 interface DestinationCardProps {
   listing: Listing;
   onClick: (id: string | number) => void;
+  onCancel?: (id: string | number) => void;
+  Options?: {
+    cancelButton?: boolean;
+    edit?: boolean;
+  };
 }
 
-const DestinationCard = ({ listing, onClick }: DestinationCardProps) => {
+const DestinationCard = ({
+  listing,
+  onClick,
+  onCancel,
+  Options,
+}: DestinationCardProps) => {
   return (
     <div
       key={listing._id}
@@ -43,10 +55,12 @@ const DestinationCard = ({ listing, onClick }: DestinationCardProps) => {
       <div className="p-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">{listing.title}</h3>
-          <div className="flex items-center">
-            <Icon type="star" size="small" className="inline-block" />
-            {listing.rating}
-          </div>
+          {listing.rating && (
+            <div className="flex items-center">
+              <Icon type="star" size="small" className="inline-block" />
+              {listing.rating}
+            </div>
+          )}
         </div>
         <p className="text-gray-500">
           {listing.city}, {listing.country}
@@ -56,17 +70,35 @@ const DestinationCard = ({ listing, onClick }: DestinationCardProps) => {
             ${listing.price} <span className="text-gray-500">·</span>
           </p>
           <p className="text-gray-500 text-sm">
-            {listing.available ? 
-              formatPeriod(listing.available.from, listing.available.to, true) : 
-              'Available dates not set'
-            }
+            {listing.available
+              ? formatPeriod(listing.available.from, listing.available.to, true)
+              : "Available dates not set"}
           </p>
         </div>
         <p className="text-gray-500 text-sm flex items-center">
           <span className="text-gray-800 text-base">{listing.maxGuests}</span>
-          <Icon type="accountOutline" size="medium" className="mr-1 center" />·{" "}
-          {listing.roomType}
+          <Icon
+            type="accountOutline"
+            size="medium"
+            className="mr-1 center"
+          />· {listing.roomType}
         </p>
+        {Options?.cancelButton && (
+          <Button
+            className="underline normal-case mt-2 z-50"
+            size="small"
+            variant="text"
+            color="error"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (listing.bookingId !== undefined) {
+                onCancel?.(listing.bookingId);
+              }
+            }}
+          >
+            Cancel Booking
+          </Button>
+        )}
       </div>
     </div>
   );

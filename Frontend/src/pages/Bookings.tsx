@@ -7,6 +7,7 @@ import { Tabs, Tab, Box } from "@mui/material";
 
 interface Listing {
   _id: string;
+  bookingId: string; // The actual booking ID for cancellation
   images: string[];
   title: string;
   rating: number;
@@ -116,6 +117,16 @@ const Bookings = () => {
     navigate(`/destinations/${id}`);
   };
 
+  const handleCancel = async (bookingId: string | number) => {
+    try {
+      await api.cancelBooking(bookingId.toString());
+      const bookingType = activeTab === 0 ? "current" : "past";
+      fetchCapaBnbs(currentPage, bookingType);
+    } catch (error) {
+      console.error("Error cancelling booking:", error);
+    }
+  };
+
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
     setCurrentPage(1);
@@ -131,8 +142,8 @@ const Bookings = () => {
     <div className="pb-8">
       <Box className="mb-4">
         <Tabs value={activeTab} onChange={handleTabChange}>
-          <Tab label={"Current Bookings "} />
-          <Tab label={"Previous Bookings"} />
+          <Tab className="normal-case text-lg" label={"Current Bookings "} />
+          <Tab className="normal-case text-lg" label={"Previous Bookings"} />
         </Tabs>
       </Box>
       {loading && (
@@ -151,6 +162,8 @@ const Bookings = () => {
                     key={listing._id}
                     listing={listing}
                     onClick={handleCardClick}
+                    onCancel={handleCancel}
+                    Options={{ cancelButton: true }}
                   />
                 ))}
               </div>

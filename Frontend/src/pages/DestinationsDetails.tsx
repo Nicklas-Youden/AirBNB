@@ -40,6 +40,7 @@ interface Destination {
     to: string;
   };
   occupied: boolean;
+  userId: string;
 }
 
 interface UserProfile {
@@ -337,19 +338,30 @@ const DestinationDetail = () => {
             </div>
 
             {destination.occupied ? (
-              <Button
-                size="large"
-                variant="contained"
-                disabled
-                className="w-full max-w-56"
-              >
-                Occupied
-              </Button>
+              destination?.userId === user?.id ? (
+                <Button
+                  size="large"
+                  color="error"
+                  variant="outlined"
+                  className="w-full max-w-56 normal-case"
+                >
+                  Cancel Booking
+                </Button>
+              ) : (
+                <Button
+                  size="large"
+                  variant="contained"
+                  disabled
+                  className="w-full max-w-56 normal-case"
+                >
+                  Occupied
+                </Button>
+              )
             ) : isAuthenticated ? (
               <Button
                 size="large"
                 variant="contained"
-                className="w-full max-w-56"
+                className="w-full max-w-56 normal-case"
                 onClick={() => setOpenBookingDialog(true)}
               >
                 Reserve
@@ -358,7 +370,7 @@ const DestinationDetail = () => {
               <Button
                 size="large"
                 variant="contained"
-                className="w-full max-w-56 bg-gradient-to-r to-purple-800 from-purple-900 rounded-lg text-white hover:opacity-90"
+                className="w-full max-w-56 bg-gradient-to-r to-purple-800 from-purple-900 rounded-lg text-white hover:opacity-90 normal-case"
                 onClick={() => setOpenLoginDialog(true)}
               >
                 Login to Reserve
