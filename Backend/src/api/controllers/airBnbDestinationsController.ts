@@ -3,6 +3,7 @@ import { AirBnbDestinationsModel } from "../models/airBnbDestinationsModels";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import { Types } from "mongoose";
 
 const tempDir = "./uploads/temp";
 if (!fs.existsSync(tempDir)) {
@@ -75,7 +76,7 @@ export const getDestinationById = async (req: Request, res: Response) => {
     const { id } = req.params;
     const result = await AirBnbDestinationsModel.aggregate([
       {
-        $match: { _id: new (await import("mongoose")).Types.ObjectId(id) },
+        $match: { _id: new Types.ObjectId(id) },
       },
       {
         $lookup: {
