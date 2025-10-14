@@ -350,7 +350,7 @@ const DestinationDetail = () => {
             </div>
 
             {destination.occupied ? (
-              isAuthenticated && destination?.userId === user?.id ? (
+              destination?.userId === user?.id ? (
                 <Button
                   size="large"
                   color="error"

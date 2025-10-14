@@ -1,5 +1,5 @@
 import DestinationCard from "../components/DestinationCard";
-import Paging from "../components/paging";
+import Paging from "../components/Paging";
 import { useApi } from "../../lib";
 import { useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";

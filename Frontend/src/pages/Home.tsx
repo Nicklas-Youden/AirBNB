@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApi } from "../../lib";
 import DestinationCard from "../components/DestinationCard";
-import Paging from "../components/paging";
+import Paging from "../components/Paging";
 
 interface Listing {
   _id: string;
