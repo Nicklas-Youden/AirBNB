@@ -41,6 +41,7 @@ interface Destination {
   };
   occupied: boolean;
   userId: string;
+  bookingId: string;
 }
 
 interface UserProfile {
@@ -71,6 +72,17 @@ const DestinationDetail = () => {
     guests: 0,
   });
   const { isAuthenticated } = useAuthContext();
+
+  const handleCancel = async () => {
+    if (destination?.bookingId) {
+      try {
+        await api.cancelBooking(destination.bookingId.toString());
+        await fetchDestination();
+      } catch (error) {
+        console.error("Error cancelling booking:", error);
+      }
+    }
+  };
 
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -344,6 +356,7 @@ const DestinationDetail = () => {
                   color="error"
                   variant="outlined"
                   className="w-full max-w-56 normal-case"
+                  onClick={handleCancel}
                 >
                   Cancel Booking
                 </Button>
