@@ -4,6 +4,7 @@ import { Button } from "@mui/material";
 
 interface Listing {
   _id: string;
+  bookingId?: string;
   images: string[];
   title: string;
   rating: number;
@@ -21,6 +22,7 @@ interface Listing {
 interface DestinationCardProps {
   listing: Listing;
   onClick: (id: string | number) => void;
+  onCancel?: (id: string | number) => void;
   Options?: {
     cancelButton?: boolean;
     edit?: boolean;
@@ -30,6 +32,7 @@ interface DestinationCardProps {
 const DestinationCard = ({
   listing,
   onClick,
+  onCancel,
   Options,
 }: DestinationCardProps) => {
   return (
@@ -82,11 +85,16 @@ const DestinationCard = ({
         </p>
         {Options?.cancelButton && (
           <Button
-            className="underline normal-case mt-2"
+            className="underline normal-case mt-2 z-50"
             size="small"
             variant="text"
             color="error"
-            onClick={() => onClick(listing._id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (listing.bookingId !== undefined) {
+                onCancel?.(listing.bookingId);
+              }
+            }}
           >
             Cancel Booking
           </Button>
