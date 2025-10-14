@@ -74,6 +74,8 @@ export const getAllDestinations = async (req: Request, res: Response) => {
 export const getDestinationById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const currentUserId = req.user?.userId; // May be undefined if not authenticated
+
     const result = await AirBnbDestinationsModel.aggregate([
       {
         $match: { _id: new Types.ObjectId(id) },
@@ -94,18 +96,50 @@ export const getDestinationById = async (req: Request, res: Response) => {
               },
             },
             { $limit: 1 },
-            { $project: { userId: 1 } },
+            { $project: { userId: 1, _id: 1 } },
           ],
           as: "activeBooking",
         },
       },
       {
         $addFields: {
+          // Only add userId and bookingId if current user is the one who booked it
           userId: {
             $cond: {
-              if: { $gt: [{ $size: "$activeBooking" }, 0] },
+              if: {
+                $and: [
+                  { $gt: [{ $size: "$activeBooking" }, 0] },
+                  currentUserId
+                    ? {
+                        $eq: [
+                          { $arrayElemAt: ["$activeBooking.userId", 0] },
+                          currentUserId,
+                        ],
+                      }
+                    : false,
+                ],
+              },
               then: { $arrayElemAt: ["$activeBooking.userId", 0] },
-              else: null,
+              else: "$$REMOVE",
+            },
+          },
+          bookingId: {
+            $cond: {
+              if: {
+                $and: [
+                  { $gt: [{ $size: "$activeBooking" }, 0] },
+                  currentUserId
+                    ? {
+                        $eq: [
+                          { $arrayElemAt: ["$activeBooking.userId", 0] },
+                          currentUserId,
+                        ],
+                      }
+                    : false,
+                ],
+              },
+              then: { $arrayElemAt: ["$activeBooking._id", 0] },
+              else: "$$REMOVE",
             },
           },
         },
