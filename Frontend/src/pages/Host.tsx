@@ -283,7 +283,7 @@ const Host = () => {
                 <TextField
                   className="purple-field"
                   fullWidth
-                  label="Price full stay"
+                  label="Price / full stay"
                   type="number"
                   value={formData.price}
                   onChange={(e) =>
