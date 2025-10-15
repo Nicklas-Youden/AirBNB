@@ -7,7 +7,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Chip,
   Box,
   Typography,
   IconButton,
@@ -65,7 +64,6 @@ const Host = () => {
   const [imageFiles, setImageFiles] = useState<ImagePreview[]>([]);
   const api = useApi();
 
-  // Cleanup object URLs when component unmounts to prevent memory leaks
   useEffect(() => {
     return () => {
       imageFiles.forEach((imagePreview) => {
@@ -285,7 +283,7 @@ const Host = () => {
                 <TextField
                   className="purple-field"
                   fullWidth
-                  label="Price full stay"
+                  label="Price / full stay"
                   type="number"
                   value={formData.price}
                   onChange={(e) =>
@@ -541,12 +539,38 @@ const Host = () => {
               />
               <Button
                 onClick={() => addAmenity(newAmenity)}
-                variant="outlined"
-                className="border-purple-300 text-purple-500 hover:bg-purple-50"
+                variant="contained"
+                className="bg-gradient-to-b from-purple-700 to-purple-800   rounded-lg text-white"
               >
                 Add
               </Button>
             </div>
+            {formData.amenities.filter(
+              (amenity) => !commonAmenities.includes(amenity)
+            ).length > 0 && (
+              <Box className="mb-4">
+                <Typography variant="subtitle2" className="mb-2">
+                  Custom Amenities:
+                </Typography>
+                <Box className="flex flex-wrap gap-1">
+                  {formData.amenities
+                    .filter((amenity) => !commonAmenities.includes(amenity))
+                    .map((amenity) => (
+                      <Button
+                        key={amenity}
+                        size="small"
+                        variant={"contained"}
+                        className={"bg-purple-500 hover:bg-purple-600"}
+                        onClick={() => {
+                          removeAmenity(amenity);
+                        }}
+                      >
+                        {amenity}
+                      </Button>
+                    ))}
+                </Box>
+              </Box>
+            )}
             <Box className="mb-4">
               <Typography variant="subtitle2" className="mb-2">
                 Common Amenities:
@@ -579,17 +603,6 @@ const Host = () => {
                 ))}
               </Box>
             </Box>
-            <Box className="flex flex-wrap gap-2">
-              {formData.amenities.map((amenity, index) => (
-                <Chip
-                  key={index}
-                  label={amenity}
-                  onClick={() => removeAmenity(amenity)}
-                  onDelete={() => removeAmenity(amenity)}
-                  className="bg-purple-500 text-white cursor-pointer transition-all duration-200 hover:bg-purple-600  shadow-md [&_.MuiChip-deleteIcon]:text-white [&_.MuiChip-deleteIcon]:hover:text-gray-200 [&_.MuiChip-deleteIcon]:transition-colors"
-                />
-              ))}
-            </Box>
           </div>
 
           <div className="">
@@ -597,9 +610,9 @@ const Host = () => {
               type="submit"
               variant="contained"
               size="large"
-              className="bg-gradient-to-b from-purple-700 to-purple-800 px-12 py-3 rounded-lg text-white hover:opacity-90"
+              className="bg-gradient-to-b from-purple-700 to-purple-800 px-12 py-3 rounded-lg text-white hover:opacity-90 normal-case"
             >
-              List Property
+              Host Property
             </Button>
           </div>
         </div>
