@@ -508,7 +508,7 @@ const DestinationDetail = () => {
             variant="contained"
             color="primary"
             form="booking-form"
-            className="bg-gradient-to-b to-purple-600 from-purple-800 rounded-lg text-white hover:opacity-90 normal-case"
+            className="bg-gradient-to-t to-purple-700 from-purple-800 rounded-lg text-white hover:opacity-90 normal-case"
           >
             Book
           </Button>
