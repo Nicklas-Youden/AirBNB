@@ -73,8 +73,8 @@ export const getAllDestinations = async (req: Request, res: Response) => {
 
 export const getDestinationById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const currentUserId = req.user?.userId;
+    const id = req.params.id;
+    const currentUserId = req.query?.userId as string;
 
     const pipeline: any[] = [
       {

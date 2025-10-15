@@ -122,9 +122,10 @@ const DestinationDetail = () => {
 
     try {
       setLoading(true);
-      const response = (await api.getSingleCapaBNB(
-        destinationId
-      )) as Destination;
+
+      const response = (await api.getSingleCapaBNB(destinationId, {
+        userId: user?.id ?? "",
+      })) as Destination;
       setDestination(response);
     } catch (err) {
       console.error("Error fetching destination:", err);
@@ -132,11 +133,32 @@ const DestinationDetail = () => {
     } finally {
       setLoading(false);
     }
-  }, [destinationId, api]);
+  }, [destinationId, api, user?.id]);
 
   useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!isAuthenticated) {
+        setUser(null);
+        return;
+      }
+
+      try {
+        const response = (await api.getUserProfile()) as UserProfile;
+        setUser(response);
+      } catch (err) {
+        console.error("Error fetching user profile:", err);
+      }
+    };
+
+    fetchUserProfile();
+  }, [isAuthenticated, api]);
+
+  useEffect(() => {
+    if (isAuthenticated && !user) {
+      return;
+    }
     fetchDestination();
-  }, [fetchDestination]);
+  }, [fetchDestination, isAuthenticated, user]);
 
   const renderImages = () => {
     if (!destination?.images || destination.images.length === 0) {
@@ -220,23 +242,6 @@ const DestinationDetail = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (!isAuthenticated) {
-        return;
-      }
-
-      try {
-        const response = (await api.getUserProfile()) as UserProfile;
-        setUser(response);
-      } catch (err) {
-        console.error("Error fetching user profile:", err);
-      }
-    };
-
-    fetchUserProfile();
-  }, [isAuthenticated, api]);
-
   if (loading) {
     return (
       <div className=" px-4 py-8">
@@ -266,9 +271,7 @@ const DestinationDetail = () => {
 
   return (
     <>
-      {/* Images Section */}
       {renderImages()}
-
       <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-6">
         <div className="md:col-span-1 lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between mb-1">
@@ -355,7 +358,7 @@ const DestinationDetail = () => {
                   size="large"
                   color="error"
                   variant="outlined"
-                  className="w-full max-w-56 normal-case"
+                  className="w-full max-w-56 normal-case rounded-lg"
                   onClick={handleCancel}
                 >
                   Cancel Booking
@@ -365,7 +368,7 @@ const DestinationDetail = () => {
                   size="large"
                   variant="contained"
                   disabled
-                  className="w-full max-w-56 normal-case"
+                  className="w-full max-w-56 normal-case rounded-lg"
                 >
                   Occupied
                 </Button>
@@ -374,7 +377,7 @@ const DestinationDetail = () => {
               <Button
                 size="large"
                 variant="contained"
-                className="w-full max-w-56 bg-gradient-to-t to-purple-600 from-purple-800 rounded-lg text-white hover:opacity-90 normal-case"
+                className="w-full max-w-56 bg-gradient-to-t to-purple-700 from-purple-800 rounded-lg text-white hover:opacity-90 normal-case"
                 onClick={() => setOpenBookingDialog(true)}
               >
                 Reserve
@@ -383,7 +386,7 @@ const DestinationDetail = () => {
               <Button
                 size="large"
                 variant="contained"
-                className="w-full max-w-56 bg-gradient-to-r to-purple-600 from-purple-800 rounded-lg text-white hover:opacity-90 normal-case"
+                className="w-full max-w-56 bg-gradient-to-r to-purple-700 from-purple-800 rounded-lg text-white hover:opacity-90 normal-case"
                 onClick={() => setOpenLoginDialog(true)}
               >
                 Login to Reserve
