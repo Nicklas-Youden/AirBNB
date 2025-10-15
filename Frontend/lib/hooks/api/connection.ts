@@ -30,7 +30,10 @@ class Connection {
     return this.get(`destinations`, params ? { params } : undefined);
   };
 
-  getSingleCapaBNB = (id: string) => this.get(`destinations/${id}`);
+  getSingleCapaBNB = (
+    id: string,
+    params?: Record<string, string | number | boolean>
+  ) => this.get(`destinations/${id}`, { params });
 
   getUserProfile = () => this.get(`users/profile`);
 
